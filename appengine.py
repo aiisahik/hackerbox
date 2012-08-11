@@ -84,7 +84,7 @@ class EmailSubmitHandler(webapp2.RequestHandler):
 
 class FeedHandler(webapp2.RequestHandler):
     def get(self):
-		path = os.path.join(os.path.dirname(__file__), 'feed.html')
+		path = os.path.join(os.path.dirname(__file__), 'feed2.html')
 		self.response.out.write(template.render(path,{}))
 
 

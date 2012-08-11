@@ -74,16 +74,35 @@ $(function(){
 
           
           success: function(collection) {
-             collection.each(function(object) {
-                console.warn(object);
-                // $(this.el).append(personView.render().el);
+              var container = $('#participant-container');
+              var main = $('#main-tab-content');
+              collection.each(function(object) {
+                 // render left nav item
+                 var rendered = _.template($('#participant-li-template').html(), {
+                     firstName: object.get("firstName"),
+                     lastName: object.get("lastName"),
+                     id: object.id
+                     });
+                 container.append(rendered);
+                 
+                 // render main tab wrappers
+                 var rendered = _.template($('#participant-main-template').html(), {
+                     firstName: object.get("firstName"),
+                     lastName: object.get("lastName"),
+                     id: object.id
+                     });
+                 main.append(rendered);
+
+
+                 
               });
+              self.getFeed("CTeaSW3801");
            
               // window.participantsView = new ParticipantsView({
               //    collection: window.participants
               // });
               // $("#participants").after(window.participantsView.render().el);
-              self.getFeed();
+              // self.getFeed();
            },
            error: function(collection, error) {
              // The collection could not be retrieved.
@@ -91,7 +110,10 @@ $(function(){
          });
       },
 
-      getFeed: function(){
+      getFeed: function(participantId){
+
+
+          window.feed = new window.Emails();
 
          _.each(window.participants.models, function(participant){
             // window.email = new Emails();
@@ -118,11 +140,23 @@ $(function(){
 // this.todos.query = new Parse.Query(Todo);
 // this.todos.query.equalTo("user", Parse.User.current());
 
-// // ...
 
-// // Fetch all the todo items for this user from Parse
-// this.todos.fetch();    
+
+            //var EmailObject = Parse.Object.extend("Email");
+            window.feed.query = new Parse.Query(Email);
+            window.feed.query.equalTo("participant",participant);
+            //window.feed.query.equalTo("fromEmail","survey@youxresearch.com");
+
+            window.feed.fetch({
+              success: function(res) {
+                console.log(res);
+
+              }, 
+              error: function(res){
+                console.log(res);
+              }
             });
+            //console.warn(window.feedCollection);
             // window.feed = new Emails();
 
             // window.feed.equalTo("participant",participant);
