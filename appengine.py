@@ -32,6 +32,9 @@ def sendemail(participant):
 		s.web.send(message)
 # username, password
 
+
+
+
 class HomeHandler(webapp2.RequestHandler):
     def get(self):
 		path = os.path.join(os.path.dirname(__file__), 'index.html')
