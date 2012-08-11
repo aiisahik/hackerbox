@@ -20,6 +20,25 @@ class HomeHandler(webapp2.RequestHandler):
 		path = os.path.join(os.path.dirname(__file__), 'index.html')
 		self.response.out.write(template.render(path,{}))
 
+class NewUserHandler(webapp2.RequestHandler):
+    def get(self):
+		path = os.path.join(os.path.dirname(__file__), 'newuser.html')
+		self.response.out.write(template.render(path,{}))
+
+class NewUserCreateHandler(webapp2.RequestHandler):
+	def post(self):
+		user = parsepy.ParseObject("User")
+		user.username = self.request.get('username')		
+		user.email = self.request.get('email')
+		user.password = self.request.get('password')
+		# user.phone = self.request.get('phone')
+		user.save()
+
+class LoginHandler(webapp2.RequestHandler):
+    def get(self):
+		path = os.path.join(os.path.dirname(__file__), 'login.html')
+		self.response.out.write(template.render(path,{}))
+
 class SetupHandler(webapp2.RequestHandler):
 	# a page for user email / first/last name / phone
     def get(self):
@@ -60,7 +79,7 @@ class EmailSubmitHandler(webapp2.RequestHandler):
 				emailObject = parsepy.ParseObject("Email")
 				emailObject.participant = p
 				emailObject.subject = self.request.get('subject')
-				emailObject.body = self.request.get('body')
+				emailObject.body = self.request.get('body').replace('%firstname%',p.firstName)
 				emailObject.toEmail = p.email
 				emailObject.fromEmail = self.request.get('researcher_email')
 				plaintext = emailObject.body
@@ -77,8 +96,8 @@ class EmailSubmitHandler(webapp2.RequestHandler):
 					    	p.email : {'%firstname%': p.firstName},
 					    }
 				    )
-				# change to bcc. 
 				s.web.send(message)
+				self.redirect("/feed")
 
 			# username, password
 
@@ -87,10 +106,11 @@ class FeedHandler(webapp2.RequestHandler):
 		path = os.path.join(os.path.dirname(__file__), 'feed2.html')
 		self.response.out.write(template.render(path,{}))
 
-
-
 app = webapp2.WSGIApplication([
     webapp2.Route(r'/', handler=HomeHandler, name='home'),
+    webapp2.Route(r'/newuser', handler=NewUserHandler, name='newuser'),
+    webapp2.Route(r'/newuser/create', handler=NewUserCreateHandler, name='newuser_create'),
+    webapp2.Route(r'/login', handler=LoginHandler, name='login'),    
     webapp2.Route(r'/setup', handler=SetupHandler, name='setup'),
     webapp2.Route(r'/setup/submit', handler=SetupPostHandler, name='setup_submit'),
     webapp2.Route(r'/feed', handler=FeedHandler, name='feed'),

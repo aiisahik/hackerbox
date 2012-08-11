@@ -25,7 +25,7 @@ $(function(){
       //    'click .thumbnail': 'toNode',
       // },
       initialize: function() {
-         _.bindAll(this, 'render');
+         _.bindAll(this,'render');
          this.model.bind('reset', this.render);
       },
       render: function() {
