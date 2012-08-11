@@ -1,0 +1,102 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Setup</title>
+  <meta name="description" content="My Parse App">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
+
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.0.14.min.js"></script>
+  <script src="/js/underscore.js" type="text/javascript"></script> 
+  <script src="/js/backbone.js" type="text/javascript"></script> 
+  <script src="/js/app.js" type="text/javascript"></script> 
+      
+
+</head>
+
+<body>
+  
+  <div id="main">
+    <h1>You're ready to use Parse!</h1>
+
+    <p>Read the documentation and start building your JavaScript app:</p>
+
+    <form method="POST" action="setup/submit" class="form-horizontal">
+      <fieldset>
+        <legend>Participant 1</legend>
+        <div class="control-group">
+          <label class="control-label" for="input01">First Name</label>
+          <div class="controls">
+            <input name="first_name" type="text" class="input-xlarge" id="input01">
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="input01">Last Name</label>
+          <div class="controls">
+            <input name="last_name" type="text" class="input-xlarge" id="input01">
+           </div>
+        </div>     
+
+        <div class="control-group">          
+          <label class="control-label" for="input01">Email Address</label>
+          <div class="controls">
+            <input name="email_address" type="text" class="input-xlarge" id="input01">
+           </div>
+        </div>    
+
+        <div class="control-group">                          
+          <label class="control-label" for="input01">Phone Number</label>
+          <div class="controls">
+            <input name="phone_number" type="text" class="input-xlarge" id="input01">          
+          </div>
+        </div> 
+
+      </fieldset>
+<!--       <button class="btn" type="submit">
+        Add
+      </button> -->
+      <button class="btn" type="submit">
+        Submit
+      </button>
+    </form>
+
+
+
+  </div>
+
+<script type="text/template" id="participant-template">
+
+     </script>
+
+  <script type="text/javascript">
+    // mytemplate = _.template($("#participant-template").html())
+    // $("#form").append(mytemplate(model.toJSON()));
+
+    // $('#target').click(function() {
+
+
+    // })
+
+    // Parse.initialize("IjTmpLYQk8sI3Vhhv2IbCprhrZ4pCnpy9yELySQ8", "I9JnUSqpP9bcqhpwIialhWZGcNtXTCTnKzqZqWwq");
+
+
+    // var TestObject = Parse.Object.extend("TestObject");
+    // var testObject = new TestObject();
+    //   testObject.save({foo: "bar"}, {
+    //   success: function(object) {
+    //     $(".success").show();
+    //     alert("yay! it worked");
+    //   },
+    //   error: function(model, error) {
+    //     $(".error").show();
+    //   }
+    // });
+  </script>
+</body>
+
+</html>
