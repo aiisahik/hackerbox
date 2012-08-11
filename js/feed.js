@@ -94,11 +94,35 @@ $(function(){
       getFeed: function(){
 
          _.each(window.participants.models, function(participant){
+            // window.email = new Emails();
+            var Email = Parse.Object.extend("Email");
+            window.email.query = new Parse.Query(Email);
+            window.email.query.equalTo("toEmail","jie.z.zhou@gmail.com");
+            window.email.fetch();
 
-            var query = new Parse.Query(Email);
-            query.equalTo("participant",participant);
-            window.feedCollection = query.collection();
+            // window.feedCollection = query.collection();
+            // email.find({
+            //   success: function(results) {
+            //     for (i=0; i<results.length; i++){
+            //       results[i]
+            //     };
+            //     alert("Successfully retrieved " + results.length + " scores.");
+            //   },
+            //   error: function(error) {
+            //     alert("Error: " + error.code + " " + error.message);
+            //   }
+// // Create our collection of Todos
+// this.todos = new TodoList;
 
+// // Setup the query for the collection to look for todos from the current user
+// this.todos.query = new Parse.Query(Todo);
+// this.todos.query.equalTo("user", Parse.User.current());
+
+// // ...
+
+// // Fetch all the todo items for this user from Parse
+// this.todos.fetch();    
+            });
             // window.feed = new Emails();
 
             // window.feed.equalTo("participant",participant);
@@ -123,7 +147,7 @@ $(function(){
             //  // The collection could not be retrieved.
             //   }
             //});
-         });
+         // });
 
       }
 
