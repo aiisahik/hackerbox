@@ -40,7 +40,6 @@ class LogSenderHandler(InboundMailHandler):
                 userResponse.addToList('attachments', attaches)        
         # fetch the participant object and store relational field
         q = ParsePy.ParseQuery('Participant')        
-        logging.info(fromEmail)
         q.eq('email', fromEmail)
         participant = q.fetch()
         if participant:
