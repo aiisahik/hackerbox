@@ -168,14 +168,14 @@ body {
 .post {
     background-color:white;
     width:550px;
-    min-height:150px;
+    min-height:100px;
     margin:auto;
     margin-top:30px;
     border-radius:10px;
     -webkit-border-radius:10px;
     -moz-border-radius: 10px;
     font-family:'museo-sans', sans-serif;
-    font-size:14px;
+    font-size:16px;
     text-align:center;
     
 }
@@ -196,7 +196,3 @@ body {
     
 }
 
-.researcher-post {
-    border:none;
-    margin-left:32px;
-}

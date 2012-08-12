@@ -29,17 +29,19 @@
       <script src="/js/bootstrap-tab.js" type="text/javascript"></script>       
       <script src="/js/json2.js" type="text/javascript"></script> 
       <script src="/js/feed.js" type="text/javascript"></script>
+
+
+
+    <!-- left particpiant list --> 
     <script id="participant-li-template" type="text/template">
         <a class="target" href="#tab-<%= id %>" data-toggle="tab"><%= firstName %> <%= lastName %></a>
     </script>
-    <script id="participant-main-template" type="text/template">
-        <div id="tab-<%= id %>" class="tab-pane active"><%= firstName %> <%= lastName %>'s content here!</div>
-    </script>
+   
     <script id="feed-container-template" type="text/template">
-        <div> 
+          <br>
           <h1><%= firstName %> <%= lastName %></h1>
           <div class="posts"></div>
-        </div>
+        
     </script>
     <script id="feed-template" type="text/template">
         <div class="post <% if (isResearcher) { %>researcher<% } else { %>user<% } %>-post triangle-border <% if (isResearcher) { %>right<% } else { %>left<% } %>">
@@ -48,41 +50,41 @@
                     <div><img style="width: 510px" src="<%= attachments[i] %>"></div>
                 <% } %>
             <% } %>
-            <div class="text"><%= body %></div>
+            <div class="text-<%= type %>">
+              <%= body %>
+              <% if (!isResearcher) { %>
+                <br><br><a class="btn btn-info" href="#">Reply</a>
+              <% } %>
+              
+            </div>
         </div>
     </script>
 
-  <script id="feed-email-template" type="text/template">
-   <fieldset>
-        <legend>Email</legend>
-
-        <div class="control-group">
-          <label class="control-label" for="input01">From:</label>
-          <div class="controls">
-            <input name="researcher_email" type="text" class="input-xlarge" id="input01" value="survey@youxresearch.com">
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label" for="input01">Subject</label>
-          <div class="controls">
-            <input name="subject" type="text" class="input-xlarge" id="input01" id="emailsubject">
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label" for="textarea">Email Body</label>
-          <div class="controls">
-          <textarea name="body" class="input-xlarge" id="emailbody" rows="10"></textarea>
-          <br>
-          <br>
-          <button class="btn btn-small btn-primary">
-            Submit
-          </button>
-          </div>
-        </div>
-      </legend>
-    </fieldset>
+  <script id="feed-reply-template" type="text/template">
+    <br>
+    <div class="reply">
+      <form method="POST" action="email/submit" class="form-horizontal">
+        <fieldset>
+            <legend>Reply to </legend>
+            <div class="control-group">
+              <label class="control-label" for="input01">Subject</label>
+              <div class="controls">
+                <input name="subject" type="text" class="input-xlarge" id="input01" id="emailsubject" value="<%= subject %>">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" class="reply-body" for="textarea">Email Body</label>
+              <div class="controls">
+              <textarea name="body" class="reply-body" id="emailbody" rows="5"></textarea>
+              <br>
+              <br>
+              <a href="#" class="btn btn-primary">Submit</a> <a href="#" class="btn btn-danger">Cancel</a>
+              </div>
+            </div>
+          </legend>
+        </fieldset>
+      </form>
+    </div>
   </script>
 
   </head>
