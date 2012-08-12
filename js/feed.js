@@ -76,7 +76,7 @@ $(function(){
           success: function(collection) {
               var container = $('#participant-container');
               var main = $('#main-tab-content');
-             collection.each(function(object) {
+              collection.each(function(object) {
                  // render left nav item
                  var rendered = _.template($('#participant-li-template').html(), {
                      firstName: object.get("firstName"),
@@ -92,8 +92,11 @@ $(function(){
                      id: object.id
                      });
                  main.append(rendered);
+
+
                  
               });
+              self.getFeed("CTeaSW3801");
            
               // window.participantsView = new ParticipantsView({
               //    collection: window.participants
@@ -107,7 +110,9 @@ $(function(){
          });
       },
 
-      getFeed: function(){
+      getFeed: function(participantId){
+
+
           window.feed = new window.Emails();
 
          _.each(window.participants.models, function(participant){
@@ -115,22 +120,18 @@ $(function(){
 
             //var EmailObject = Parse.Object.extend("Email");
             window.feed.query = new Parse.Query(Email);
-            //window.feed.query.equalTo("participant",participant);
-            window.feed.query.equalTo("fromEmail","survey@youxresearch.com");
-            //window.feedCollection = window.query.collection();
+            window.feed.query.equalTo("participant",participant);
+            //window.feed.query.equalTo("fromEmail","survey@youxresearch.com");
 
-            // window.query.find({
-            //   success: function(results) {
-            //      results.each(function(object){
-            //         console.warn(object.toJSON());
-            //       });
-            //     //alert("Successfully retrieved " + results.length + " scores.");
-            //   },
-            //   error: function(error) {
-            //     alert("Error: " + error.code + " " + error.message);
-            //   }
-            // });
-            window.feed.fetch();
+            window.feed.fetch({
+              success: function(res) {
+                console.log(res);
+
+              }, 
+              error: function(res){
+                console.log(res);
+              }
+            });
             //console.warn(window.feedCollection);
             // window.feed = new Emails();
 
