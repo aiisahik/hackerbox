@@ -68,6 +68,7 @@ $(function(){
           var Email = Parse.Object.extend("Email");
           window.query = new Parse.Query(Email);
           window.query.equalTo("participant",participant);
+          window.query.descending('updatedAt');
 
           // window.query.equalTo("toEmail","jie.z.zhou@gmail.com");
           window.feed = window.query.collection();
@@ -116,6 +117,11 @@ $(function(){
             } else { 
               json.type = "p";
             }
+            json.id = this.model.id;
+            var date = new Date(this.model.updatedAt);
+            json.month = date.format('mmm').toUpperCase();
+            json.day = date.format('dd')
+            json.time = date.format('h:MM TT')
            $(this.el).empty().append(template(json));
            return this;
         },
@@ -126,17 +132,21 @@ $(function(){
             return this.model.toJSON();
         },
         reply: function() {
-          $("#replyemail").remove();
           var template = _.template($("#feed-reply-template").html());
           var json = this.modelJSON();
-          this.$el.append(template(json));
-          return this;
+          $('#reply-container-' + this.model.id).html(template(json));
+          $('#reply-container-' + this.model.id).show();
+          return false;
         },
         sendEmail: function() {
           var subject = $('#emailsubject').val();
           var toEmail = this.modelJSON()['fromEmail'];
           var researcher_email = 'test@userresearchtool.appspotmail.com';
           var body = $('#emailbody').val();
+          if (!body) {
+              alert('Please enter some text');
+              return false;
+          }
           var participantID = this.model.get('participant').id;
           $.ajax({
             url: '/email/ajax',
@@ -145,17 +155,18 @@ $(function(){
             success: function(data) {
               $("#replyemail").remove().append("<h2>Email Submitted</h2>");
                 $('#replyemail').fadeOut('slow', function() {
-                  $('#replyemail').remove();
+                  $('#reply-container-' + this.model.id).hide();
                 // Animation complete.
               });
             }
           });
+          return false;
         },
 
         cancel: function() {
-          $("#replyemail").remove();
+          $('#reply-container-' + this.model.id).hide();
           //this.$el.find(".reply").remove();
-          return this;
+          return false;
 
         }
      });
