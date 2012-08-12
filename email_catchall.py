@@ -42,7 +42,11 @@ class LogSenderHandler(InboundMailHandler):
 		# 	payload=form_data,
 		# 	method=urlfetch.POST,
 		# 	headers={'Content-Type': 'application/x-www-form-urlencoded'})
+		ParsePy.APPLICATION_ID = "IjTmpLYQk8sI3Vhhv2IbCprhrZ4pCnpy9yELySQ8"
+		ParsePy.MASTER_KEY = "iGW730DEr0h5VA4110jCwQf0TJjnIvyNIWRXemT8"
 
+		userEmail = ParsePy.ParseObject("userEmail")
+		userEmail.fromEmail = 
 
 
 	#    plaintext_bodies = mail_message.bodies('text/plain')
