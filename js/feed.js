@@ -103,8 +103,13 @@ $(function(){
            this.model.bind('reset', this.render);
         },
         render: function() {
-            var template = _.template($("#" + (this.isResearcher ? 'feed-template-researcher' : "feed-template")).html());
-           $(this.el).empty().append(template(this.modelJSON()));
+            var template = _.template($("#feed-template").html());
+            var json = this.modelJSON();
+            if (!json.attachments) {
+                json.attachments = false;
+            }
+            json.isResearcher = this.isResearcher();
+           $(this.el).empty().append(template(json));
            return this;
         },
         isResearcher: function() {
