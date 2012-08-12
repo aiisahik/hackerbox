@@ -10,6 +10,7 @@ import hashlib, base64
 import sendgrid
 import parsepy
 import logging
+from django.utils import simplejson
 
 parsepy.APPLICATION_ID = "IjTmpLYQk8sI3Vhhv2IbCprhrZ4pCnpy9yELySQ8"
 parsepy.MASTER_KEY = "iGW730DEr0h5VA4110jCwQf0TJjnIvyNIWRXemT8"
@@ -88,7 +89,7 @@ class EmailSubmitHandler(webapp2.RequestHandler):
 
 				logging.info('sending email: ' + plaintext)
 
-				message = sendgrid.Message("survey@youxresearch.com", emailObject.subject, 
+				message = sendgrid.Message("test@userresearchtool.appspotmail.com", emailObject.subject, 
 					plaintext , html)
 
 				message.add_to(
@@ -97,6 +98,7 @@ class EmailSubmitHandler(webapp2.RequestHandler):
 					    }
 				    )
 				s.web.send(message)
+				print HttpResponse(json.dumps(message), mimetype="application/json")
 				self.redirect("/feed")
 
 			# username, password
