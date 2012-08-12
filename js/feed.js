@@ -108,37 +108,54 @@ $(function(){
       },
 
       getFeed: function(){
+          window.feed = new window.Emails();
 
          _.each(window.participants.models, function(participant){
 
-            var query = new Parse.Query(Email);
-            query.equalTo("participant",participant);
-            var collection = query.collection();
 
-            window.feed = new Emails();
+            //var EmailObject = Parse.Object.extend("Email");
+            window.feed.query = new Parse.Query(Email);
+            //window.feed.query.equalTo("participant",participant);
+            window.feed.query.equalTo("fromEmail","survey@youxresearch.com");
+            //window.feedCollection = window.query.collection();
 
-            window.feed.equalTo("participant",participant);
-            window.feed.fetch({
-               success: function(collection) {
-                  collection.each(function(object){
-                     console.warn(object);
-                  });
+            // window.query.find({
+            //   success: function(results) {
+            //      results.each(function(object){
+            //         console.warn(object.toJSON());
+            //       });
+            //     //alert("Successfully retrieved " + results.length + " scores.");
+            //   },
+            //   error: function(error) {
+            //     alert("Error: " + error.code + " " + error.message);
+            //   }
+            // });
+            window.feed.fetch();
+            //console.warn(window.feedCollection);
+            // window.feed = new Emails();
 
-                  // var query = new Parse.Query(GameScore);
-                  // query.equalTo("playerEmail", "dstemkoski@example.com");
-                  // query.first({
-                  // success: function(object) {
-                  //   // Successfully retrieved the object.
-                  // },
-                  //   error: function(error) {
-                  //     alert("Error: " + error.code + " " + error.message);
-                  // }
-               },
+            // window.feed.equalTo("participant",participant);
+            // window.feed.fetch({
+            //    success: function(collection) {
+            //       collection.each(function(object){
+            //          console.warn(object);
+            //       });
 
-                error: function(collection, error) {
-             // The collection could not be retrieved.
-              }
-            });
+            //       // var query = new Parse.Query(GameScore);
+            //       // query.equalTo("playerEmail", "dstemkoski@example.com");
+            //       // query.first({
+            //       // success: function(object) {
+            //       //   // Successfully retrieved the object.
+            //       // },
+            //       //   error: function(error) {
+            //       //     alert("Error: " + error.code + " " + error.message);
+            //       // }
+            //    },
+
+            //     error: function(collection, error) {
+            //  // The collection could not be retrieved.
+            //   }
+            //});
          });
 
       }
