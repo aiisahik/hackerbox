@@ -97,32 +97,32 @@ $(function(){
 
             var query = new Parse.Query(Email);
             query.equalTo("participant",participant);
-            var collection = query.collection();
+            window.feedCollection = query.collection();
 
-            window.feed = new Emails();
+            // window.feed = new Emails();
 
-            window.feed.equalTo("participant",participant);
-            window.feed.fetch({
-               success: function(collection) {
-                  collection.each(function(object){
-                     console.warn(object);
-                  });
+            // window.feed.equalTo("participant",participant);
+            // window.feed.fetch({
+            //    success: function(collection) {
+            //       collection.each(function(object){
+            //          console.warn(object);
+            //       });
 
-                  // var query = new Parse.Query(GameScore);
-                  // query.equalTo("playerEmail", "dstemkoski@example.com");
-                  // query.first({
-                  // success: function(object) {
-                  //   // Successfully retrieved the object.
-                  // },
-                  //   error: function(error) {
-                  //     alert("Error: " + error.code + " " + error.message);
-                  // }
-               },
+            //       // var query = new Parse.Query(GameScore);
+            //       // query.equalTo("playerEmail", "dstemkoski@example.com");
+            //       // query.first({
+            //       // success: function(object) {
+            //       //   // Successfully retrieved the object.
+            //       // },
+            //       //   error: function(error) {
+            //       //     alert("Error: " + error.code + " " + error.message);
+            //       // }
+            //    },
 
-                error: function(collection, error) {
-             // The collection could not be retrieved.
-              }
-            });
+            //     error: function(collection, error) {
+            //  // The collection could not be retrieved.
+            //   }
+            //});
          });
 
       }
