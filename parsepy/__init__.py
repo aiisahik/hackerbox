@@ -113,8 +113,7 @@ class ParseObject(ParseBase):
 
     def _convertToParseType(self, prop):
         key, value = prop
-
-        logging.info(type(value))        
+   
         if type(value) == ParseObject:
             value = {'__type': 'Pointer',
                     'className': value._class_name,
