@@ -62,14 +62,14 @@
 
   <script id="feed-reply-template" type="text/template">
     <br>
-    <div class="reply">
+    <div class="reply" id="replyemail">
       <form method="POST" action="email/submit" class="form-horizontal">
         <fieldset>
             <legend>Reply to </legend>
             <div class="control-group">
               <label class="control-label" for="input01">Subject</label>
               <div class="controls">
-                <input name="subject" type="text" class="input-xlarge" id="input01" id="emailsubject" value="<%= subject %>">
+                <input name="subject" type="text" class="reply-body" id="emailsubject" value="<%= subject %>">
               </div>
             </div>
             <div class="control-group">

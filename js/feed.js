@@ -95,6 +95,8 @@ $(function(){
       events: {
          'click .btn-info': 'reply',
          'click .btn-danger': 'cancel',
+         'click .btn-primary': 'sendEmail',
+         
       },
       initialize: function() {
            _.bindAll(this, 'render');
@@ -118,19 +120,39 @@ $(function(){
            return this;
         },
         isResearcher: function() {
-            return this.modelJSON()['fromEmail'] == 'survey@youxresearch.com';
+            return (this.modelJSON()['fromEmail'] == 'survey@youxresearch.com') || (this.modelJSON()['fromEmail'] == 'test@userresearchtool.appspotmail.com');
         },
         modelJSON: function() {
             return this.model.toJSON();
         },
         reply: function() {
+          $("#replyemail").remove();
           var template = _.template($("#feed-reply-template").html());
           var json = this.modelJSON();
           this.$el.append(template(json));
           return this;
         },
+        sendEmail: function() {
+          var subject = $('#emailsubject').val();
+          var researcher_email = 'test@userresearchtool.appspotmail.com';
+          var body = $('#emailbody').val();
+          $.ajax({
+            url: '/email/submit',
+            type: "POST",
+            data: {subject : subject, body: body, researcher_email: researcher_email},
+            success: function(data) {
+              $("#replyemail").remove().append("<h2>Email Submitted</h2>");
+                $('#replyemail').fadeOut('slow', function() {
+                  $('#replyemail').remove();
+                // Animation complete.
+              });
+            }
+          });
+        },
 
         cancel: function() {
+          $("#replyemail").remove();
+          //this.$el.find(".reply").remove();
           return this;
 
         }
