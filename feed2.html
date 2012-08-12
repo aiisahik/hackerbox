@@ -9,6 +9,7 @@
 
     <!-- Le styles -->
     <link href="css/bootstrap.css" rel="stylesheet">
+	<link href="css/styles.css" rel="stylesheet">		    
 	<link href="css/feed.css" rel="stylesheet">	
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -34,16 +35,21 @@
     <script id="participant-main-template" type="text/template">
         <div id="tab-<%= id %>" class="tab-pane active"><%= firstName %> <%= lastName %>'s content here!</div>
     </script>
-    <script id="feed-head-template" type="text/template">
+    <script id="feed-container-template" type="text/template">
         <div> 
           <h1><%= firstName %> <%= lastName %></h1>
+          <div class="posts"></div>
         </div>
     </script>
     <script id="feed-template" type="text/template">
-
-        <div class="tab-pane" > 
-          <h2><%= subject %></h2>
-          <br> <%= body %> 
+      <div class="post user-post triangle-border left">
+        <img src="images/sample.jpeg">
+        <div class="text"><%= body %></div>
+      </div>          
+    </script>
+    <script id="feed-template-researcher" type="text/template">
+        <div class="post researcher-post triangle-border right">
+            <div class="text"><%= body %></div>
         </div>
     </script>
 
@@ -125,7 +131,6 @@
         </div><!--/span-->
         <div class="span9">
             <div id="main-tab-content" class="tab-content">
-                
             </div>
           <hr>
      <footer>

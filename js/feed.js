@@ -47,21 +47,7 @@ $(function(){
         }
     });
 
-   window.EntryView = Backbone.View.extend({
-      template: _.template($("#feed-template").html()),
 
-      // events: {
-      //    'click .thumbnail': 'toNode',
-      // },
-      initialize: function() {
-           _.bindAll(this, 'render');
-           this.model.bind('reset', this.render);
-        },
-        render: function() {
-           $(this.el).empty().append(this.template(this.model.toJSON()));
-           return this;
-        },
-     });
 
     
 
@@ -96,17 +82,38 @@ $(function(){
           });
         },
         displayFeed: function(feedCollection,participant) {
-            var feedHeaderTemplate = _.template($("#feed-head-template").html());
+            var feedHeaderTemplate = _.template($("#feed-container-template").html());
 
-            $("#main-tab-content").empty().append(feedHeaderTemplate(participant.toJSON()));
+            $("#main-tab-content").html(feedHeaderTemplate(participant.toJSON()));
 
             var feedView = new FeedView({
                collection: feedCollection
             });
-            $("#main-tab-content").append(feedView.render().el);
+            $("#main-tab-content .posts").append(feedView.render().el);
         }
       
    });
+   
+   window.EntryView = Backbone.View.extend({
+      // events: {
+      //    'click .thumbnail': 'toNode',
+      // },
+      initialize: function() {
+           _.bindAll(this, 'render');
+           this.model.bind('reset', this.render);
+        },
+        render: function() {
+            var template = _.template($("#" + (this.isResearcher ? 'feed-template-researcher' : "feed-template")).html());
+           $(this.el).empty().append(template(this.modelJSON()));
+           return this;
+        },
+        isResearcher: function() {
+            return this.modelJSON['fromEmail'] == 'survey@youxresearch.com';
+        },
+        modelJSON: function() {
+            return this.model.toJSON();
+        }
+     });
 
    window.FeedView = Backbone.View.extend({
       
