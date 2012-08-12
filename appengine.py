@@ -8,6 +8,9 @@ import time, os
 import urlparse
 import hashlib, base64
 
+
+
+
 class HomeHandler(webapp2.RequestHandler):
     def get(self):
 		path = os.path.join(os.path.dirname(__file__), 'index.html')
