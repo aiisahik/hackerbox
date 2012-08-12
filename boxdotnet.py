@@ -27,6 +27,8 @@ import mimetools
 import mimetypes
 import os
 import sys
+import logging
+import json
 
 from xml.dom.minidom import parseString
 import xml.dom
@@ -75,6 +77,12 @@ class XMLNode:
     def __getitem__(self, key):
         """Retrieve a node's attribute from the attrib hash."""
         return self.attrib[key]
+    
+    def __unicode__(self):
+        res = ''
+        for k,v in self.attrib:
+            res = res + k + ":" + " " + v
+        return res
 
     #-----------------------------------------------------------------------
     @classmethod
@@ -211,6 +219,16 @@ class BoxDotNet(object):
 
     #-------------------------------------------------------------------
     #-------------------------------------------------------------------    
+    
+    def get_file_data(self, file_id):
+        url = 'https://api.box.com/2.0/files/' + file_id
+        logging.info(url)
+        request = urllib2.Request(url)
+        request.add_header("Authorization", 'BoxAuth api_key=lvmgy588chabeadnugrdh7k7n5iz59kj&auth_token=k473spr5fz6hc9kyy8mkjb2o8z7m4a0s')
+        response = urllib2.urlopen(request)
+        return json.loads(response.read())
+        
+         
     
     def upload(self, filename, file_contents, **arg):
         """
