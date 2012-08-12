@@ -10,7 +10,7 @@ import hashlib, base64
 import sendgrid
 import parsepy
 import logging
-from django.utils import simplejson
+# from django.utils import simplejson
 
 parsepy.APPLICATION_ID = "IjTmpLYQk8sI3Vhhv2IbCprhrZ4pCnpy9yELySQ8"
 parsepy.MASTER_KEY = "iGW730DEr0h5VA4110jCwQf0TJjnIvyNIWRXemT8"
