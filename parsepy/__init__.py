@@ -114,6 +114,7 @@ class ParseObject(ParseBase):
     def _convertToParseType(self, prop):
         key, value = prop
 
+        logging.info(type(value))        
         if type(value) == ParseObject:
             value = {'__type': 'Pointer',
                     'className': value._class_name,
@@ -128,7 +129,6 @@ class ParseObject(ParseBase):
         return (key, value)
 
     def _convertFromParseType(self, prop):
-        logging.info(len(prop))
         key, value = prop
 
         if type(value) == dict and value.has_key('__type'):
@@ -153,6 +153,7 @@ class ParseObject(ParseBase):
         #properties_list = [(key, value) for key, value in self.__dict__.items() if key[0] != '_']
 
         properties_list = map(self._convertToParseType, properties_list)
+        logging.info(properties_list)
         
         properties_dict = dict(properties_list)
         json_properties = json.dumps(properties_dict)

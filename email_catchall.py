@@ -6,17 +6,13 @@ from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 from google.appengine.ext.webapp.util import run_wsgi_app
 import urllib2
 from google.appengine.api import urlfetch
-import parsepy2 as ParsePy
+import parsepy as ParsePy
 import boxdotnet as Box
 import emailscraper as EmailScraper
 
-# Jie's
 ParsePy.APPLICATION_ID = "IjTmpLYQk8sI3Vhhv2IbCprhrZ4pCnpy9yELySQ8"
 ParsePy.MASTER_KEY = "iGW730DEr0h5VA4110jCwQf0TJjnIvyNIWRXemT8"
 
-# Mine - urt
-# ParsePy.APPLICATION_ID = "PC3kFSx73egQ3sWgB2E6d9IdOudhtftcmtVGakyg"
-# ParsePy.MASTER_KEY = "K5qe9mITvaIsNg1LYwH1PN6TsdAlU1fTCDXG6zJC"
 
 class LogSenderHandler(InboundMailHandler):
     def receive(self, mail_message):
@@ -42,7 +38,15 @@ class LogSenderHandler(InboundMailHandler):
                     url = self.get_box_share_url(file_id)
                     attaches.append(url)
                 userResponse.addToList('attachments', attaches)        
-        
+        # fetch the participant object and store relational field
+        q = ParsePy.ParseQuery('Participant')        
+        logging.info(fromEmail)
+        q.eq('email', fromEmail)
+        participant = q.fetch()
+        if participant:
+            if len(participant) > 0:
+                participant = participant[0]
+            userResponse.participant = participant        
         userResponse.save()      
     
     def upload_to_box(self, filename, filedata, shouldDecode=True):
