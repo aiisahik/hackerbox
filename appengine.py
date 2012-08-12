@@ -88,7 +88,7 @@ class EmailSubmitHandler(webapp2.RequestHandler):
 
 				logging.info('sending email: ' + plaintext)
 
-				message = sendgrid.Message("test@userresearchtool.appspotmail.com", emailObject.subject, 
+				message = sendgrid.Message(("test@userresearchtool.appspotmail.com", "Katherine from Square"), emailObject.subject, 
 					plaintext , html)
 
 				message.add_to(
@@ -123,7 +123,7 @@ class EmailAjaxHandler(webapp2.RequestHandler):
 
 		logging.info('sending email: ' + plaintext)
 
-		message = sendgrid.Message("test@userresearchtool.appspotmail.com", emailObject.subject, 
+		message = sendgrid.Message(("test@userresearchtool.appspotmail.com" , "Katherine from Square"), emailObject.subject, 
 			plaintext , html)
 
 		message.add_to(
