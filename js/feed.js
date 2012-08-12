@@ -74,16 +74,32 @@ $(function(){
 
           
           success: function(collection) {
+              var container = $('#participant-container');
+              var main = $('#main-tab-content');
              collection.each(function(object) {
-                console.warn(object);
-                // $(this.el).append(personView.render().el);
+                 // render left nav item
+                 var rendered = _.template($('#participant-li-template').html(), {
+                     firstName: object.get("firstName"),
+                     lastName: object.get("lastName"),
+                     id: object.id
+                     });
+                 container.append(rendered);
+                 
+                 // render main tab wrappers
+                 var rendered = _.template($('#participant-main-template').html(), {
+                     firstName: object.get("firstName"),
+                     lastName: object.get("lastName"),
+                     id: object.id
+                     });
+                 main.append(rendered);
+                 
               });
            
               // window.participantsView = new ParticipantsView({
               //    collection: window.participants
               // });
               // $("#participants").after(window.participantsView.render().el);
-              self.getFeed();
+              // self.getFeed();
            },
            error: function(collection, error) {
              // The collection could not be retrieved.
