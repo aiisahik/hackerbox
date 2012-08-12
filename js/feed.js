@@ -18,38 +18,38 @@ $(function(){
    });
 
 // -- VIEWS
-   window.ParticipantView = Backbone.View.extend({
-      template: _.template($("#participant-template").html()),
-      tagName: 'tr',
-      // events: {
-      //    'click .thumbnail': 'toNode',
-      // },
-      initialize: function() {
-         _.bindAll(this, 'render');
-         this.model.bind('reset', this.render);
-      },
-      render: function() {
-         $(this.el).empty().append(this.template(this.model.toJSON()));
-         return this;
-      },
-   });
+   // window.ParticipantView = Backbone.View.extend({
+   //    template: _.template($("#participant-template").html()),
+   //    tagName: 'tr',
+   //    // events: {
+   //    //    'click .thumbnail': 'toNode',
+   //    // },
+   //    initialize: function() {
+   //       _.bindAll(this, 'render');
+   //       this.model.bind('reset', this.render);
+   //    },
+   //    render: function() {
+   //       $(this.el).empty().append(this.template(this.model.toJSON()));
+   //       return this;
+   //    },
+   // });
 
-   window.ParticipantsView = Backbone.View.extend({
-      tagName: 'tbody',
-      initialize: function() {
-         _.bindAll(this, 'render');
-         this.collection.bind('reset', this.render);
-      },
-      render: function() {
-         _.each(this.collection.models, function(participant){
-            var participantView = new ParticipantView({
-               model: participant
-            });
-            $(this.el).append(participantView.render().el);
-         }, this);
-         return this;
-      }
-   });
+   // window.ParticipantsView = Backbone.View.extend({
+   //    tagName: 'tbody',
+   //    initialize: function() {
+   //       _.bindAll(this, 'render');
+   //       this.collection.bind('reset', this.render);
+   //    },
+   //    render: function() {
+   //       _.each(this.collection.models, function(participant){
+   //          var participantView = new ParticipantView({
+   //             model: participant
+   //          });
+   //          $(this.el).append(participantView.render().el);
+   //       }, this);
+   //       return this;
+   //    }
+   // });
 
    var AppRouter = Backbone.Router.extend({
       routes: {
@@ -68,21 +68,22 @@ $(function(){
       },
 
       getData: function(){
+        var self = this;
          window.participants = new Participants();
          window.participants.fetch({
-           success: function(collection) {
-               collection.each(function(object) {
-                  console.warn(object);
-            // $(this.el).append(personView.render().el);
-            
-             });
-            window.participantsView = new ParticipantsView({
-               collection: window.participants
-            });
-            // $("#participants").after(window.participantsView.render().el);
-            getFeed();
 
-
+          
+          success: function(collection) {
+             collection.each(function(object) {
+                console.warn(object);
+                // $(this.el).append(personView.render().el);
+              });
+           
+              // window.participantsView = new ParticipantsView({
+              //    collection: window.participants
+              // });
+              // $("#participants").after(window.participantsView.render().el);
+              self.getFeed();
            },
            error: function(collection, error) {
              // The collection could not be retrieved.
@@ -92,15 +93,30 @@ $(function(){
 
       getFeed: function(){
 
-         _.each(window.participants, function(participant){
+         _.each(window.participants.models, function(participant){
+
+            var query = new Parse.Query(Email);
+            query.equalTo("participant",participant);
+            var collection = query.collection();
+
             window.feed = new Emails();
 
             window.feed.equalTo("participant",participant);
             window.feed.fetch({
                success: function(collection) {
-                  // collection.each(function(object)){
-                  //    console.warn(object);
-                  // });
+                  collection.each(function(object){
+                     console.warn(object);
+                  });
+
+                  // var query = new Parse.Query(GameScore);
+                  // query.equalTo("playerEmail", "dstemkoski@example.com");
+                  // query.first({
+                  // success: function(object) {
+                  //   // Successfully retrieved the object.
+                  // },
+                  //   error: function(error) {
+                  //     alert("Error: " + error.code + " " + error.message);
+                  // }
                },
 
                 error: function(collection, error) {
@@ -109,18 +125,7 @@ $(function(){
             });
          });
 
-      },
-
-      var query = new Parse.Query(GameScore);
-query.equalTo("playerEmail", "dstemkoski@example.com");
-query.first({
-  success: function(object) {
-    // Successfully retrieved the object.
-  },
-  error: function(error) {
-    alert("Error: " + error.code + " " + error.message);
-  }
-});
+      }
 
    });
 
