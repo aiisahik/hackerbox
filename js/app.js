@@ -119,7 +119,14 @@ $(function(){
 
             $("#participants").after(window.participantsView.render().el);
             $("#check_all").click(function() {
-               $("#participant_table").find("input").prop("checked",true)
+
+               if ($("#check_all").prop("checked")){
+                  $("#participant_table").find("input").prop("checked",true);  
+
+               } else { 
+                  $("#participant_table").find("input").prop("checked",false);
+                 
+               }
             });
              
            },

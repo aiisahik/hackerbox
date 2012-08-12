@@ -61,6 +61,8 @@ class EmailSubmitHandler(webapp2.RequestHandler):
 				emailObject.participant = p
 				emailObject.subject = self.request.get('subject')
 				emailObject.body = self.request.get('body')
+				emailObject.toEmail = p.email
+				emailObject.fromEmail = self.request.get('researcher_email')
 				plaintext = emailObject.body
 				html = emailObject.body.replace("/n","<br>")
 				emailObject.save()
@@ -80,11 +82,18 @@ class EmailSubmitHandler(webapp2.RequestHandler):
 
 			# username, password
 
+class FeedHandler(webapp2.RequestHandler):
+    def get(self):
+		path = os.path.join(os.path.dirname(__file__), 'feed.html')
+		self.response.out.write(template.render(path,{}))
+
+
 
 app = webapp2.WSGIApplication([
     webapp2.Route(r'/', handler=HomeHandler, name='home'),
     webapp2.Route(r'/setup', handler=SetupHandler, name='setup'),
     webapp2.Route(r'/setup/submit', handler=SetupPostHandler, name='setup_submit'),
+    webapp2.Route(r'/feed', handler=FeedHandler, name='feed'),
     webapp2.Route(r'/email', handler=EmailHandler, name='email'),
     webapp2.Route(r'/email/submit', handler=EmailSubmitHandler, name='email_submit') ])
 
