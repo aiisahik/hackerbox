@@ -35,11 +35,52 @@
         <div id="tab-<%= id %>" class="tab-pane" ><%= firstName %> <%= lastName %> &#39; content here!
         </div>
     </script>
-    <script id="feed-template" type="text/template">
-        <div id="tab-<%= id %>" class="tab-pane" ><%= firstName %> <%= lastName %> &#39; content here!
-        
+    <script id="feed-head-template" type="text/template">
+        <div> 
+          <h1><%= firstName %> <%= lastName %></h1>
         </div>
     </script>
+    <script id="feed-template" type="text/template">
+
+        <div class="tab-pane" > 
+          <h2><%= subject %></h2>
+          <br> <%= body %> 
+        </div>
+    </script>
+
+  <script id="feed-email-template" type="text/template">
+   <fieldset>
+        <legend>Email</legend>
+
+        <div class="control-group">
+          <label class="control-label" for="input01">From:</label>
+          <div class="controls">
+            <input name="researcher_email" type="text" class="input-xlarge" id="input01" value="survey@youxresearch.com">
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="input01">Subject</label>
+          <div class="controls">
+            <input name="subject" type="text" class="input-xlarge" id="input01" id="emailsubject">
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="textarea">Email Body</label>
+          <div class="controls">
+          <textarea name="body" class="input-xlarge" id="emailbody" rows="10"></textarea>
+          <br>
+          <br>
+          <button class="btn btn-small btn-primary">
+            Submit
+          </button>
+          </div>
+        </div>
+      </legend>
+    </fieldset>
+  </script>
+
   </head>
   <body>
     <div class="navbar navbar-fixed-top">

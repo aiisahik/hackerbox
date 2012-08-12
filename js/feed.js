@@ -18,7 +18,7 @@ $(function(){
    });
 
 // -- VIEWS
-   window.FeedView = Backbone.View.extend({
+   window.EntryView = Backbone.View.extend({
       template: _.template($("#feed-template").html()),
 
       // events: {
@@ -34,18 +34,18 @@ $(function(){
       },
    });
 
-   window.FeedsView = Backbone.View.extend({
-      tagName: 'tbody',
+   window.FeedView = Backbone.View.extend({
+      
       initialize: function() {
          _.bindAll(this, 'render');
          this.collection.bind('reset', this.render);
       },
       render: function() {
-         _.each(this.collection.models, function(participant){
-            var participantView = new ParticipantView({
-               model: participant
+         _.each(this.collection.models, function(entry){
+            var entryView = new EntryView({
+               model: entry
             });
-            $(this.el).append(participantView.render().el);
+            $(this.el).append(entryView.render().el);
          }, this);
          return this;
       }
@@ -101,7 +101,7 @@ $(function(){
          });
       },
       getFeed: function(participant){
-
+        var self = this;
         // window.feed = new window.Emails();
         var Email = Parse.Object.extend("Email");
         window.query = new Parse.Query(Email);
@@ -112,13 +112,26 @@ $(function(){
         window.feed.fetch({
           success: function(res) {
             console.log(res);
+            self.displayFeed(window.feed,participant);
+
           }, 
           error: function(res){
             console.log(res);
           }
         });
 
+      },
+      displayFeed: function(feedCollection,participant) {
+          var feedHeaderTemplate = _.template($("#feed-head-template").html());
+          
+          $("#main-tab-content").empty().append(feedHeaderTemplate(participant.toJSON()));
+
+          var feedView = new FeedView({
+             collection: feedCollection
+          });
+          $("#main-tab-content").append(feedView.render().el);
       }
+
    });
 
    $(function() {
