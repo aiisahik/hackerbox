@@ -55,7 +55,7 @@ $(function(){
       template: _.template($("#feed-container-template").html()),
       tagName: 'div',
       initialize: function() {
-         _.bindAll(this, 'render');
+         _.bindAll(this,'render');
          this.model.bind('reset', this.render);
       },
       render: function() {

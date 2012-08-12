@@ -7,7 +7,14 @@
   <meta name="viewport" content="width=device-width">
   <link href="css/bootstrap.css" rel="stylesheet">
   <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/styles.css">
+  
   <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/splash.css">
+  
+  <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+  
+  
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.0.14.min.js"></script>
   <script src="/js/underscore.js" type="text/javascript"></script> 
@@ -18,8 +25,19 @@
 </head>
 
 <body>
-  <div class="container">
-      <div class="well" align="left">
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <ul class="nav">
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div id="splash-image">
+  </div>
+  
+  <div id="splash-text">
         <h1>YOUx Research</h1><br>
         <p>YOUx Research is a web application that helps researchers efficiently manage user diary studies. 
            Each study participant is automatically assigned a unique email. Posting a new diary entry is as 
@@ -27,19 +45,16 @@
            can communicate directly with each participant through the diary feed or send prompts and reminders to 
            the entire cohort.
     	</p>
-      </div>
+    	<br />
 
       <form action="/new" method="post"><p>
 		<input name="email" type="text" class="span6" placeholder="Email"><p>
 		<input name="password" type="text" class="span6" placeholder="Password"><p>		
         
-    	<button type="submit" class="btn btn-primary btn-large offset4">Login &raquo;</button>
-    	<div class="offset4">
-    		<p>or sign up </p>
-    	</div>
+    	<button type="submit" class="btn btn-primary btn-large btn-custom">Login &raquo;</button>
+    	<div id="or-signup">Don't have an account? Sign up here.</div>
       </form>
     </div>
-  </div>
 
 </body>
 

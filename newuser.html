@@ -1,0 +1,89 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Setup</title>
+  <meta name="description" content="My Parse App">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
+
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.0.14.min.js"></script>
+  <script src="/js/underscore.js" type="text/javascript"></script> 
+  <script src="/js/backbone.js" type="text/javascript"></script> 
+  <script src="/js/app.js" type="text/javascript"></script> 
+
+</head>
+
+<body>
+  
+  <div id="main">
+    <h1>Welcome to YOUXResearch!</h1>
+
+    <p>Create an account</p>
+
+    <form method="POST" action="newuser/create" class="form-horizontal">
+      <fieldset>
+        <legend>User Login</legend>
+        <div class="control-group" >
+          <label class="control-label" for="input01">Username</label>
+          <div class="controls">
+            <input name="username" type="text" class="input-xlarge" id="input01">
+          </div>
+        </div>
+
+
+        <div class="control-group">          
+          <label class="control-label" for="input01">Email Address</label>
+          <div class="controls">
+            <input name="email" type="text" class="input-xlarge" id="input01">
+           </div>
+        </div>    
+
+<!--         <div class="control-group">          
+          <label class="control-label" for="input01">Phone Number</label>
+          <div class="controls">
+            <input name="phone" type="text" class="input-xlarge" id="input01">
+           </div>
+        </div>      -->     
+
+        <div class="control-group">
+          <label class="control-label" for="input01">Password</label>
+          <div class="controls">
+            <input name="password" type="password" class="input-xlarge" id="input01">
+           </div>
+        </div>     
+
+      </fieldset>
+
+      <button class="btn" type="submit">
+        Submit
+      </button>
+    </form>
+  </div>
+
+  <script type="text/javascript">
+    // var user = new Parse.User();
+    // user.set("username", username);
+    // user.set("password", password);
+    // user.set("email", email);
+
+    // // other fields can be set just like with Parse.Object
+    // // user.set("phone", phone);
+
+    // user.signUp(null, {
+    //   success: function(user) {
+    //     // Hooray! Let them use the app now.
+    //   },
+    //   error: function(user, error) {
+    //     // Show the error message somewhere and let the user try again.
+    //     alert("Error: " + error.code + " " + error.message);
+    //   }
+    // });
+   </script>
+
+</body>
+
+</html>

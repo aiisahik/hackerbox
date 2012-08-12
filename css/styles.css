@@ -189,10 +189,13 @@ body {
 
 .post img {
     width:250px;
-    margin:25px;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
        -moz-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
        -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     
 }
 
+.researcher-post {
+    border:none;
+    margin-left:32px;
+}
