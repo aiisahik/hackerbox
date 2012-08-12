@@ -95,8 +95,8 @@ $(function(){
    window.EntryView = Backbone.View.extend({
       events: {
          'click .btn-info': 'reply',
-         'click .btn-danger': 'cancel',
-         'click .btn-primary': 'sendEmail',
+         'click .btn-submit': 'cancel',
+         'click .btn-success': 'sendEmail',
          
       },
       initialize: function() {
