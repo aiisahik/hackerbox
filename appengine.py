@@ -98,10 +98,8 @@ class EmailSubmitHandler(webapp2.RequestHandler):
 					    }
 				    )
 				s.web.send(message)
-				print HttpResponse(json.dumps(message), mimetype="application/json")
-				self.redirect("/feed")
 
-			# username, password
+		self.response.out.write('[{"success": "true"}]')				
 
 class FeedHandler(webapp2.RequestHandler):
     def get(self):
