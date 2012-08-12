@@ -16,10 +16,11 @@ html {
     box-shadow: 0 1px 5px rgba(34, 25, 25, 0.4);
           -moz-box-shadow: 0 2px 5px rgba(34, 25, 25, 0.4);
           -webkit-box-shadow: 0 1px 5px rgba(34, 25, 25, 0.4);
-    font-family:'Droid Sans', sans-serif;
+    font-family:'Quattrocento Sans', sans-serif;
     text-shadow:0 1px 0 #FFFFFF;
     font-size:14px;
 }
+
 
 input.span6, textarea.span6, .uneditable-input.span6 {
     width:290px;

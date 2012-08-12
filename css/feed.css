@@ -6,13 +6,12 @@
 
 .nav-list > li > a,
 .nav-list > li > a:hover {    
-    padding: 11px 10px;
     color: #303030;
     background-color: #a5a5a5;
     border-bottom: 1px solid #9b9b9b;
     border-top: 1px solid #bcbcbc;
     font-weight:bold;
-    
+    height:40px;
 }
 
 .nav-list > li.active > a,
@@ -116,6 +115,39 @@ padding:10px;
 
 }
 
+.float-right {
+    float:right;
+}
+
+#feed-name {
+    font-family:'Quattrocento Sans', sans-serif;
+}
+
+#profile-details {
+    overflow:hidden;
+}
+
+#profile-image {
+    float:left;
+}
+
+.profile-image {
+    height:30px;
+    float:left;
+}
+
+.nav-name {
+    text-align:center;
+    margin-left:20px;
+    margin-top:10px;
+
+}
+
+#profile-name {
+    top:40px;
+    padding-top:10px;
+}
+
 .reply{
     border: none;
     margin-left: 32px;
@@ -132,7 +164,6 @@ padding:10px;
 
 .reply-body {
     width: 310px;
-    font-family:'museo-sans', sans-serif;
     font-size:16px;
 }
 
@@ -144,6 +175,5 @@ padding:10px;
 
 .text-p {
     text-align: left;
-    padding-top: 10px;
-    
+    padding:20px;
 }

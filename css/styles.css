@@ -55,6 +55,20 @@ body {
 	margin-bottom:0px;
 }
 
+h1 {
+    font-family: 'Quattrocento Sans', sans-serif;
+}
+
+label {
+    font-family: 'Quattrocento Sans', sans-serif;
+    font-weight:bold;
+}
+
+legend {
+    margin-bottom:10px;
+    font-family: 'Quattrocento Sans', sans-serif;
+}
+
 #email-button {
     position:fixed;
     top:5px;
@@ -68,7 +82,6 @@ body {
 }
 
 .posts {
-    margin-top:50px;
     min-height:500px;
 } 
 
@@ -174,8 +187,8 @@ body {
     border-radius:10px;
     -webkit-border-radius:10px;
     -moz-border-radius: 10px;
-    font-family:'museo-sans', sans-serif;
-    font-size:16px;
+    font-family: 'Quattrocento Sans', sans-serif;
+    font-size:14px;
     text-align:center;
     
 }
@@ -203,7 +216,8 @@ body {
 .date-container {
     width: 75px;
     text-align: center;
-    color: #2e2e2e;
+    color: #A5A5A5;
+    font-family: 'Helvetica Neue', sans-serif;
 }
 .date-container > div{
 

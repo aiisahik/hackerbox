@@ -6,8 +6,9 @@
   <meta name="description" content="My Parse App">
   <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans:400,700' rel='stylesheet' type='text/css'>
 
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.0.14.min.js"></script>
@@ -21,13 +22,12 @@
 <body>
   
   <div id="main">
-    <h1>You're ready to use Parse!</h1>
+    <h1>Add participant</h1>
 
-    <p>Read the documentation and start building your JavaScript app:</p>
 
     <form method="POST" action="setup/submit" class="form-horizontal">
       <fieldset>
-        <legend>Participant</legend>
+        <legend>Create a private feed for you and the participant.</legend>
         <div class="control-group">
           <label class="control-label" for="input01">First Name</label>
           <div class="controls">
@@ -60,9 +60,13 @@
 <!--       <button class="btn" type="submit">
         Add
       </button> -->
-      <button class="btn" type="submit">
+      <button class="btn btn-success" type="submit">
         Submit
       </button>
+      <a class="btn" type="" href="/feed">
+        Cancel
+      </a>
+      
     </form>
 
 
