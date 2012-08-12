@@ -95,6 +95,17 @@ legend {
 .subheader {
     background-color:#d6d6d6;
     height:30px;
+    padding-top:5px;
+        
+}
+
+.dropdown-menu {
+    font-size:11px;
+}
+
+#sort-by {
+    margin-left:250px;
+    
 }
 
 .posts {

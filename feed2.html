@@ -31,6 +31,7 @@
       <script src="/js/json2.js" type="text/javascript"></script> 
       <script src="/js/date-format.js" type="text/javascript"></script> 
       <script src="/js/feed.js" type="text/javascript"></script>
+      <script src="/js/bootstrap-dropdown.js" type="text/javascript"></script>
       <script type="text/javascript" src="/js/tooltip.js"></script>
     	
       <link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -122,10 +123,11 @@
       <div class="navbar-inner">
         <ul class="nav pull-right">
           <li class="" id="researcher-nav"><img class="thumbnail" id="researcher-image" src="images/profile1.jpg" /></li>
-          <li id="researcher-name">Researcher</li>
+          <li id="researcher-name">RESEARCHER</li>
          </ul>
       </div>
     </div>
+   
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span3">
@@ -140,6 +142,23 @@
            </ul>
           </div><!--/.well -->
         </div><!--/span-->
+        
+         <div class="subheader">
+           
+          
+           
+           
+           <div id="sort-by" class="btn-group dropdown">
+             <button class="btn btn-small">Sort by</button>
+             <button class="btn dropdown-toggle" data-toggle="dropdown">
+               <span class="caret"></span></button>
+             <ul class="dropdown-menu">
+               <li><a href="#">Oldest to Newest</a></li>
+               <li><a href="#">Newest to Oldest</a></li>
+             </ul>
+           </div>
+          </div>
+          
         <div class="span9">
             <div id="main-tab-content">
             </div>
