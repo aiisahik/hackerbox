@@ -4,6 +4,9 @@ body {
     background-image: url('../images/bg.gif');
 }
 
+a:visited {
+}
+
 #main {
     width: 500px;
     margin: auto;
@@ -57,6 +60,19 @@ body {
 
 h1 {
     font-family: 'Quattrocento Sans', sans-serif;
+}
+
+h2 {
+    font-family: 'Quattrocento Sans', sans-serif;
+    
+}
+table {
+    font-family: 'Quattrocento Sans', sans-serif;
+    
+}
+
+.btn-black {
+    color:black;
 }
 
 label {

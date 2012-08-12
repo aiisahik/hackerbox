@@ -148,6 +148,21 @@ padding:10px;
     padding-top:10px;
 }
 
+#researcher-image {
+    width:30px;
+    margin-top:8px;
+    margin-right:10px;
+}
+
+#researcher-name {
+    text-align:right;
+    font-weight:bold;
+    font-family: 'Quattrocento Sans';
+    color:white;
+    padding-top:18px;
+    margin-right:20px;
+}
+
 .reply{
     border: none;
     margin-left: 32px;
