@@ -109,3 +109,40 @@ padding:10px;
 #main-tab-content {
     padding-left: 20px;
 }
+
+.researcher-post {
+    border:none;
+    margin-left:32px;
+
+}
+
+.reply{
+
+    border: none;
+    margin-left: 32px;
+    background-color:white;
+    width:550px;
+    min-height:100px;
+    margin:auto;
+    border-radius:10px;
+    -webkit-border-radius:10px;
+    -moz-border-radius: 10px;
+    padding: 15px;
+}
+
+.reply-body {
+    width: 310px;
+    font-family:'museo-sans', sans-serif;
+    font-size:16px;
+}
+
+.text-r {
+    text-align: right;
+    
+}
+
+
+.text-p {
+    text-align: left;
+    
+}

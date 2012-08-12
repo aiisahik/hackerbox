@@ -52,10 +52,10 @@ $(function(){
     
 
    ParticipantView = Backbone.View.extend({
-      template: _.template($("#participant-main-template").html()),
+      template: _.template($("#feed-container-template").html()),
       tagName: 'div',
       initialize: function() {
-         _.bindAll(this, 'render');
+         _.bindAll(this,'render');
          this.model.bind('reset', this.render);
       },
       render: function() {
@@ -82,10 +82,7 @@ $(function(){
           });
         },
         displayFeed: function(feedCollection,participant) {
-            var feedHeaderTemplate = _.template($("#feed-container-template").html());
-
-            $("#main-tab-content").html(feedHeaderTemplate(participant.toJSON()));
-
+            $("#main-tab-content").html(this.template(participant.toJSON()));
             var feedView = new FeedView({
                collection: feedCollection
             });
@@ -95,13 +92,15 @@ $(function(){
    });
    
    window.EntryView = Backbone.View.extend({
-      // events: {
-      //    'click .thumbnail': 'toNode',
-      // },
+      events: {
+         'click .btn-info': 'reply',
+         'click .btn-danger': 'cancel',
+      },
       initialize: function() {
            _.bindAll(this, 'render');
            this.model.bind('reset', this.render);
         },
+
         render: function() {
             var template = _.template($("#feed-template").html());
             var json = this.modelJSON();
@@ -109,14 +108,31 @@ $(function(){
                 json.attachments = false;
             }
             json.isResearcher = this.isResearcher();
+
+            if (this.isResearcher()){
+              json.type = "r";
+            } else { 
+              json.type = "p";
+            }
            $(this.el).empty().append(template(json));
            return this;
         },
         isResearcher: function() {
-            return this.modelJSON['fromEmail'] == 'survey@youxresearch.com';
+            return this.modelJSON()['fromEmail'] == 'survey@youxresearch.com';
         },
         modelJSON: function() {
             return this.model.toJSON();
+        },
+        reply: function() {
+          var template = _.template($("#feed-reply-template").html());
+          var json = this.modelJSON();
+          this.$el.append(template(json));
+          return this;
+        },
+
+        cancel: function() {
+          return this;
+
         }
      });
 
