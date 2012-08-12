@@ -99,7 +99,42 @@ class EmailSubmitHandler(webapp2.RequestHandler):
 				    )
 				s.web.send(message)
 
-		self.response.out.write('[{"success": "true"}]')				
+		self.redirect("/feed")
+
+
+class EmailAjaxHandler(webapp2.RequestHandler):
+    def post(self):
+		s = sendgrid.Sendgrid('jinxdabinx', 'sendgrid', secure=True) 
+		# include user and password
+		p = parsepy.ParseQuery("Participant").get(self.request.get('participantID'))
+		toEmail = self.request.get('toEmail')
+		
+		#Participants = q.fetch()
+		logging.info('sending email:'+toEmail)
+
+		emailObject = parsepy.ParseObject("Email")
+		emailObject.participant = p
+		emailObject.subject = self.request.get('subject')
+		emailObject.body = self.request.get('body').replace('%firstname%',p.firstName)
+		emailObject.toEmail = p.email
+		emailObject.fromEmail = self.request.get('researcher_email')
+		plaintext = emailObject.body
+		html = emailObject.body.replace("/n","<br>")
+		emailObject.save()
+
+		logging.info('sending email: ' + plaintext)
+
+		message = sendgrid.Message("test@userresearchtool.appspotmail.com", emailObject.subject, 
+			plaintext , html)
+
+		message.add_to(
+			    {
+			    	p.email : {'%firstname%': p.firstName},
+			    }
+		    )
+		s.web.send(message)
+
+		self.response.out.write('[{"success": "true"}]')			
 
 class FeedHandler(webapp2.RequestHandler):
     def get(self):
@@ -115,5 +150,6 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/setup/submit', handler=SetupPostHandler, name='setup_submit'),
     webapp2.Route(r'/feed', handler=FeedHandler, name='feed'),
     webapp2.Route(r'/email', handler=EmailHandler, name='email'),
+    webapp2.Route(r'/email/ajax', handler=EmailAjaxHandler, name='email'),
     webapp2.Route(r'/email/submit', handler=EmailSubmitHandler, name='email_submit') ])
 

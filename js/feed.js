@@ -134,12 +134,14 @@ $(function(){
         },
         sendEmail: function() {
           var subject = $('#emailsubject').val();
+          var toEmail = this.modelJSON()['fromEmail'];
           var researcher_email = 'test@userresearchtool.appspotmail.com';
           var body = $('#emailbody').val();
+          var participantID = this.model.get('participant').id;
           $.ajax({
-            url: '/email/submit',
+            url: '/email/ajax',
             type: "POST",
-            data: {subject : subject, body: body, researcher_email: researcher_email},
+            data: {subject : subject, body: body, researcher_email: researcher_email, toEmail : toEmail, participantID: participantID},
             success: function(data) {
               $("#replyemail").remove().append("<h2>Email Submitted</h2>");
                 $('#replyemail').fadeOut('slow', function() {
