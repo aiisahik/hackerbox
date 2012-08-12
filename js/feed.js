@@ -113,7 +113,7 @@ $(function(){
            return this;
         },
         isResearcher: function() {
-            return this.modelJSON['fromEmail'] == 'survey@youxresearch.com';
+            return this.modelJSON()['fromEmail'] == 'survey@youxresearch.com';
         },
         modelJSON: function() {
             return this.model.toJSON();
