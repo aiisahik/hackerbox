@@ -16,6 +16,7 @@ import base64
 import json
 import datetime
 import collections
+import logging
 
 API_ROOT = 'https://api.parse.com/1/classes'
 
@@ -74,6 +75,13 @@ class ParseObject(ParseBase):
     def createdAt(self):
         return self._created_at and self._ISO8601ToDatetime(self._created_at) or None
 
+    def addToList(self, list_name, list_of_objects):
+        new_dict = dict()
+        new_dict[list_name] = dict(__op='AddUnique',objects=list_of_objects)
+        # attrs_dict = dict(map(self._convertFromParseType, new_dict))
+        attrs_dict = new_dict
+        self.__dict__.update(attrs_dict)
+
     def save(self):
         if self._object_id:
             self._update()
@@ -106,6 +114,7 @@ class ParseObject(ParseBase):
     def _convertToParseType(self, prop):
         key, value = prop
 
+        logging.info(type(value))        
         if type(value) == ParseObject:
             value = {'__type': 'Pointer',
                     'className': value._class_name,
@@ -144,6 +153,7 @@ class ParseObject(ParseBase):
         #properties_list = [(key, value) for key, value in self.__dict__.items() if key[0] != '_']
 
         properties_list = map(self._convertToParseType, properties_list)
+        logging.info(properties_list)
         
         properties_dict = dict(properties_list)
         json_properties = json.dumps(properties_dict)
