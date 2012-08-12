@@ -3,10 +3,11 @@
   <meta charset="utf-8">
 
   <title>My Parse App</title>
-  <meta name="description" content="My Parse App">
+  <meta name="description" content="YOUx Research">
   <meta name="viewport" content="width=device-width">
+  <link href="css/bootstrap.css" rel="stylesheet">
   <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/index.css">
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.0.14.min.js"></script>
   <script src="/js/underscore.js" type="text/javascript"></script> 
@@ -17,48 +18,23 @@
 </head>
 
 <body>
-  
-  <div id="main">
-    <h1>You're ready to use Parse!</h1>
+  <div class="container">
+      <div class="well" align="left">
+        <h1>YOUx Research</h1><br>
+        <p>YOUx Research is a web application to manage diary studies with...  </p>
+      </div>
 
-    <p>Read the documentation and start building your JavaScript app:</p>
-
-    <ul>
-      <li><a href="https://www.parse.com/docs/js_guide">Parse JavaScript Guide</a></li>
-      <li><a href="https://www.parse.com/docs/js">Parse JavaScript API Documentation</a></li>
-    </ul>
-
-    <div style="display:none" class="error">
-      Looks like there was a problem saving the test object. Make sure you've set your application ID and javascript key correctly in the call to <code>Parse.initialize</code> in this file.
-    </div>
-
-    <div style="display:none" class="success">
-      <p>We've also just created your first object using the following code:</p>
-      
-        <code>
-          var TestObject = Parse.Object.extend("TestObject");<br/>
-          var testObject = new TestObject();<br/>
-          testObject.save({foo: "bar"});
-        </code>
+      <form action="/new" method="post"><p>
+        <input name="firstName" type="text" class="span6" placeholder="First Name"><p>
+        <input name="lastName" type="text" class="span6" placeholder="Last Name"><p>
+        <input name="company" type="text" class="span6" placeholder="Company"><p>
+		<input name="email" type="text" class="span6" placeholder="Email"><p>
+        
+    	<button type="submit" class="btn btn-primary btn-large offset4" >Create account &raquo;</button><p>
+      </form>
     </div>
   </div>
 
-  <script type="text/javascript">
-    Parse.initialize("IjTmpLYQk8sI3Vhhv2IbCprhrZ4pCnpy9yELySQ8", "I9JnUSqpP9bcqhpwIialhWZGcNtXTCTnKzqZqWwq");
-
-
-    var TestObject = Parse.Object.extend("TestObject");
-    var testObject = new TestObject();
-      testObject.save({foo: "bar"}, {
-      success: function(object) {
-        $(".success").show();
-        alert("yay! it worked");
-      },
-      error: function(model, error) {
-        $(".error").show();
-      }
-    });
-  </script>
 </body>
 
 </html>
