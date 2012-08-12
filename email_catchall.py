@@ -4,18 +4,48 @@ import logging, email
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler 
 from google.appengine.ext.webapp.util import run_wsgi_app
+import urllib2
+from google.appengine.api import urlfetch
+import parsepy
+
 
 # message = mail.InboundEmailMessage(self.request.body)
 #          logging.info("Received a message from: " + mail_message.sender)
 
+# class UserEmails(db.Model):
+# 	toEmail = db.StringProperty()
+# 	fromEmail = db.StringProperty()
+# 	body = db.StringProperty()
+# 	subject = db.StringProperty()
+# 	timestamp = db.DateTimeProperty(auto_now_add=True)
+
+
 class LogSenderHandler(InboundMailHandler):
     def receive(self, mail_message):
         logging.info("Received a message from: " + mail_message.sender)
-        logging.info("Received a message from: " + mail_message.to)
-        logging.info("Received a message from: " + mail_message.subject)
-        logging.info("Received a message from: " + mail_message.body)
+        logging.info("Message sent to: " + mail_message.to)
+        logging.info("Subject: " + mail_message.subject)
+        # logging.info("Body: " + mail_message.body)
+        # logging.info("Attachments: " + mail_message.attachments)
 
-     #    plaintext_bodies = mail_message.bodies('text/plain')
+		# form_fields = {
+		# 	"first_name": "Albert",
+		# 	"last_name": "Johnson",
+		#  	"email_address": "Albert.Johnson@example.com"
+		# }
+
+		# ## STORE TO USER EMAILS DB
+		# url = "https://api.parse.com/1/classes/userEmails"
+
+		# form_data = urllib.urlencode(form_fields)
+		# result = urlfetch.fetch(url=url,
+		# 	payload=form_data,
+		# 	method=urlfetch.POST,
+		# 	headers={'Content-Type': 'application/x-www-form-urlencoded'})
+
+
+
+	#    plaintext_bodies = mail_message.bodies('text/plain')
     	# html_bodies = mail_message.bodies('text/html')
 
     	# for content_type, body in html_bodies:
