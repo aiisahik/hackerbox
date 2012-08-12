@@ -18,38 +18,120 @@ $(function(){
    });
 
 // -- VIEWS
-   window.FeedView = Backbone.View.extend({
-      template: _.template($("#feed-template").html()),
+    LeftNavItem = Backbone.View.extend({
+        template: _.template($('#participant-li-template').html()),
+        tagName: 'li',
+        events: {
+            'click .target': 'onClick'
+        },
+        initialize: function() {
+            _.bindAll(this, 'render');
+            this.model.bind('reset', this.render);
+        },
+        render: function(activate) {
+            var data = this.model.toJSON();
+            data.id = this.model.id;                 
+            this.$el.html(this.template(data));                 
+           $('#' + this.options.parentId).append(this.$el);
+           if (activate) {
+               this.$el.addClass('active');
+               this.renderMain();
+           }
+           return this;
+        },
+        onClick: function() {
+            this.renderMain();
+        },
+        renderMain: function() {
+            this.options.pView.render();
+        }
+    });
 
-      // events: {
-      //    'click .thumbnail': 'toNode',
-      // },
+
+
+    
+
+   ParticipantView = Backbone.View.extend({
+      template: _.template($("#participant-main-template").html()),
+      tagName: 'div',
       initialize: function() {
          _.bindAll(this, 'render');
          this.model.bind('reset', this.render);
       },
       render: function() {
-         $(this.el).empty().append(this.template(this.model.toJSON()));
-         return this;
+          this.getFeed(this.model);          
       },
-   });
+      
+      getFeed: function(participant){
+          var self = this;
+          // window.feed = new window.Emails();
+          var Email = Parse.Object.extend("Email");
+          window.query = new Parse.Query(Email);
+          window.query.equalTo("participant",participant);
 
-   window.FeedsView = Backbone.View.extend({
-      tagName: 'tbody',
+          // window.query.equalTo("toEmail","jie.z.zhou@gmail.com");
+          window.feed = window.query.collection();
+          window.feed.fetch({
+            success: function(res) {
+              self.displayFeed(window.feed,participant);
+
+            }, 
+            error: function(res){
+              console.log(res);
+            }
+          });
+        },
+        displayFeed: function(feedCollection,participant) {
+            var feedHeaderTemplate = _.template($("#feed-container-template").html());
+
+            $("#main-tab-content").html(feedHeaderTemplate(participant.toJSON()));
+
+            var feedView = new FeedView({
+               collection: feedCollection
+            });
+            $("#main-tab-content .posts").append(feedView.render().el);
+        }
+      
+   });
+   
+   window.EntryView = Backbone.View.extend({
+      // events: {
+      //    'click .thumbnail': 'toNode',
+      // },
+      initialize: function() {
+           _.bindAll(this, 'render');
+           this.model.bind('reset', this.render);
+        },
+        render: function() {
+            var template = _.template($("#" + (this.isResearcher ? 'feed-template-researcher' : "feed-template")).html());
+           $(this.el).empty().append(template(this.modelJSON()));
+           return this;
+        },
+        isResearcher: function() {
+            return this.modelJSON['fromEmail'] == 'survey@youxresearch.com';
+        },
+        modelJSON: function() {
+            return this.model.toJSON();
+        }
+     });
+
+   window.FeedView = Backbone.View.extend({
+      
       initialize: function() {
          _.bindAll(this, 'render');
          this.collection.bind('reset', this.render);
       },
       render: function() {
-         _.each(this.collection.models, function(participant){
-            var participantView = new ParticipantView({
-               model: participant
+         _.each(this.collection.models, function(entry){
+            var entryView = new EntryView({
+               model: entry
             });
-            $(this.el).append(participantView.render().el);
+            $(this.el).append(entryView.render().el);
          }, this);
          return this;
       }
    });
+
 
    var AppRouter = Backbone.Router.extend({
       routes: {
@@ -72,53 +154,29 @@ $(function(){
          window.participants = new Participants();
          window.participants.fetch({
 
+          
           success: function(collection) {
               var container = $('#participant-container');
               var main = $('#main-tab-content');
-              collection.each(function(object) {
-                 // render left nav item
-                 var rendered = _.template($('#participant-li-template').html(), {
-                     firstName: object.get("firstName"),
-                     lastName: object.get("lastName"),
-                     id: object.id
-                     });
-                 container.append(rendered);
-                 
-                 // render main tab wrappers
-                 var rendered = _.template($('#participant-main-template').html(), {
-                     firstName: object.get("firstName"),
-                     lastName: object.get("lastName"),
-                     id: object.id
-                     });
-                 main.append(rendered);
-
+             collection.each(function(object, index) {                 
+                 var pView = new ParticipantView({model: object, parentId: 'main-tab-content'});                 
+                 var lnItem = new LeftNavItem({model: object, parentId: 'participant-container', pView: pView});                 
+                 lnItem.render(index == 0);
               });
-              self.getFeed(window.participants.first());
-        
+           
+              // window.participantsView = new ParticipantsView({
+              //    collection: window.participants
+              // });
+              // $("#participants").after(window.participantsView.render().el);
+              // self.getFeed();
            },
            error: function(collection, error) {
+             // The collection could not be retrieved.
            }
          });
-      },
-      getFeed: function(participant){
-
-        // window.feed = new window.Emails();
-        var Email = Parse.Object.extend("Email");
-        window.query = new Parse.Query(Email);
-        window.query.equalTo("participant",participant);
-
-        // window.query.equalTo("toEmail","jie.z.zhou@gmail.com");
-        window.feed = window.query.collection();
-        window.feed.fetch({
-          success: function(res) {
-            console.log(res);
-          }, 
-          error: function(res){
-            console.log(res);
-          }
-        });
-
       }
+      
+
    });
 
    $(function() {
