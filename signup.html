@@ -10,13 +10,7 @@
   <link rel="stylesheet" href="css/index.css">
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.0.14.min.js"></script>
-  <script src="/js/underscore.js" type="text/javascript"></script> 
-  <script src="/js/backbone.js" type="text/javascript"></script> 
-  <script src="/js/app.js" type="text/javascript"></script> 
-      
-
 </head>
-
 <body>
   <div class="container">
       <div class="well" align="left">
@@ -30,16 +24,45 @@
       </div>
 
       <form action="/new" method="post"><p>
-        <input name="firstName" type="text" class="span6" placeholder="First Name"><p>
-        <input name="lastName" type="text" class="span6" placeholder="Last Name"><p>
-        <input name="company" type="text" class="span6" placeholder="Company"><p>
-		<input name="email" type="text" class="span6" placeholder="Email"><p>
-		<input name="password" type="text" class="span6" placeholder="Password"><p>		
-        
-    	<button type="submit" class="btn btn-primary btn-large offset4" >Create account &raquo;</button><p>
+        <input id="firstName" type="text" class="span6" placeholder="First Name"><p>
+        <input id="lastName" type="text" class="span6" placeholder="Last Name"><p>
+        <input id="company" type="text" class="span6" placeholder="Company"><p>
+		    <input id="email" type="text" class="span6" placeholder="Email"><p>
+        <input id="phone" type="text" class="span6" placeholder="phone"><p>   
+		    <input id="password" type="text" class="span6" placeholder="Password"><p>		
+
+        <button type="submit" id="signup" class="btn btn-primary btn-large offset4" >Create account &raquo;</button><p>
       </form>
     </div>
   </div>
+  <script type="text/javascript">
+
+  $(function(){
+    Parse.initialize("IjTmpLYQk8sI3Vhhv2IbCprhrZ4pCnpy9yELySQ8", "I9JnUSqpP9bcqhpwIialhWZGcNtXTCTnKzqZqWwq");
+    $("#signup").click(function(e) {
+      e.preventDefault();
+      //var myemail = $("#myemail").val();
+      var user = new Parse.User();
+      user.set("firstName", $("#firstName").val());
+      user.set("lastName", $("#lastName").val());
+      user.set("company", $("#company").val());
+      user.set("email", $("#email").val());
+      user.set("phone", $("#phone").val());
+      user.set("password", $("#password").val());
+      user.signUp(null, {
+        success: function(user) {
+          console.log(user);
+        // Hooray! Let them use the app now.
+        },
+        error: function(user, error) {
+          // Show the error message somewhere and let the user try again.
+          alert("Error: " + error.code + " " + error.message);
+        }
+      });
+    });
+  });
+
+  </script>
 
 </body>
 

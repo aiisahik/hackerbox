@@ -60,18 +60,6 @@
       var myusername = $("#myusername").val();
       var mypass = $("#mypass").val();   
 
-      // var user = new Parse.User();
-      // user.set("username", myusername);
-      // user.set("password", mypass);
-      
-      // // user.logIn({
-      //   success: function(user) {
-      //     //console.log(user);
-      //     // Do stuff after successful login.
-      //   },
-      //   error: function(user, error) {
-      //     // The login failed. Check error to see why.
-      // }});
       Parse.User.logIn(myusername, mypass, {
       //Parse.User.logIn("michesun@gmail.com", "youxresearch", {
         success: function(user) {

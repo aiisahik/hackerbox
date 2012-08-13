@@ -1,11 +1,17 @@
 $(function(){
 
 
-   Parse.initialize("IjTmpLYQk8sI3Vhhv2IbCprhrZ4pCnpy9yELySQ8", "I9JnUSqpP9bcqhpwIialhWZGcNtXTCTnKzqZqWwq");
+  Parse.initialize("IjTmpLYQk8sI3Vhhv2IbCprhrZ4pCnpy9yELySQ8", "I9JnUSqpP9bcqhpwIialhWZGcNtXTCTnKzqZqWwq");
+  var currentUser = Parse.User.current();
+  if (currentUser) {
+    $("#researcher-name").empty().append(currentUser.get('firstName')+' '+currentUser.get('lastName'));
+  } else {
+      window.location = "/";
+  }
 
-   // Participant Model
-   // ----------
-   //window.Participant = Backbone.Model.extend();
+
+    // Participant Model
+    // ----------
 
    Participant = Parse.Object.extend("Participant");
    window.Participants = Parse.Collection.extend({
@@ -31,7 +37,7 @@ $(function(){
         render: function(activate) {
             var data = this.model.toJSON();
             data.id = this.model.id;                 
-            this.$el.html(this.template(data));                 
+            this.$el.html(this.template(data));
            $('#' + this.options.parentId).append(this.$el);
            if (activate) {
                this.$el.addClass('active');
