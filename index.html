@@ -97,8 +97,14 @@
           user.set("password", $("#password").val());
           user.signUp(null, {
             success: function(user) {
-              console.log(user);
-            // Hooray! Let them use the app now.
+              //login
+              Parse.User.logIn($("#email").val(), $("#password").val(), {
+                success: function(user) {
+                  window.location = "/feed";
+                },
+                error: function(user, error) {}
+              });
+            
             },
             error: function(user, error) {
               // Show the error message somewhere and let the user try again.
