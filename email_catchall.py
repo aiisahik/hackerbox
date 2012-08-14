@@ -9,7 +9,7 @@ from google.appengine.api import urlfetch
 import parsepy as ParsePy
 import boxdotnet as Box
 import emailscraper as EmailScraper
-from PIL import Image
+#from PIL import Image
 
 ParsePy.APPLICATION_ID = "IjTmpLYQk8sI3Vhhv2IbCprhrZ4pCnpy9yELySQ8"
 ParsePy.MASTER_KEY = "iGW730DEr0h5VA4110jCwQf0TJjnIvyNIWRXemT8"
@@ -54,18 +54,18 @@ class LogSenderHandler(InboundMailHandler):
         b = Box.BoxDotNet()        
         if shouldDecode:
             filedata = filedata.decode()
-            basewidth = 510
-            img = Image.open(filedata)
-            wpercent = (basewidth / float(img.size[0]))
-            hsize = int((float(img.size[1]) * float(wpercent)))
-            img = img.resize((basewidth, hsize), Image.ANTIALIAS)
-            newname = filename+‘resized.png’
-            newfile = file(newname, "rb")
-            newfiledata = fp.read()
-            img.save(newname)
+            #basewidth = 510
+            #img = Image.open(filedata)
+            #wpercent = (basewidth / float(img.size[0]))
+            #hsize = int((float(img.size[1]) * float(wpercent)))
+            #img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+            #newname = filename+‘resized.png’
+            #newfile = file(newname, "rb")
+            #newfiledata = fp.read()
+            #img.save(newname)
 
         res = b.upload(filename, filedata, auth_token='k473spr5fz6hc9kyy8mkjb2o8z7m4a0s',folder_id='351017243',share=1)
-        res = b.upload(newname, newfiledata, auth_token='k473spr5fz6hc9kyy8mkjb2o8z7m4a0s',folder_id='351017243',share=1)
+        #res = b.upload(newname, newfiledata, auth_token='k473spr5fz6hc9kyy8mkjb2o8z7m4a0s',folder_id='351017243',share=1)
         return res.files[0].file[0]['id']
         
     def get_box_share_url(self, file_id):

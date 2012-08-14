@@ -8,8 +8,6 @@
   <link href="css/bootstrap.css" rel="stylesheet">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/styles.css">
-  
-  <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="css/splash.css">
   
   <link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -41,8 +39,80 @@
   
   <div id="splash-image">
   </div>
-  
-  <div id="splash-text">
+
+  <div id="splash-add-study" class="splash" hidden="true">
+    <h1>Create Study</h1>
+    <form method="POST" action="setup/submit" class="form-horizontal">
+      <fieldset>
+        <legend>Create a new study in which you can add and track your participants</legend>
+        <div class="control-group">
+          <label class="control-label">Study Name</label>
+          <div class="controls">
+            <input name="first_name" type="text" class="input-xlarge" id="studyname" placeholder="E.g. 2012 User Experience Study">
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" >Email Address</label>
+          <div class="controls">
+            <input name="last_name" type="text" class="input-xlarge" id="studyemail"placeholder="E.g. 2012uxstudy">@userresearchtool.appspotmail.com
+           </div>
+        </div>     
+        <div class="control-group">                          
+          <label class="control-label" for="input01">Study Phone Number</label>
+          <div class="controls">
+            <input name="phone_number" type="text" class="input-xlarge" id="studyphone" placeholder="E.g. (555) 555-5555">          
+          </div>
+        </div> 
+
+      </fieldset>
+      <button class="btn btn-success" type="submit" id="submit_study">Submit</button>
+      <a class="btn" type="" href="/feed">Cancel</a>
+    </form>
+  </div>
+
+  <div id="splash-add-participant" class="splash" hidden="true">
+   <h1>Add participant</h1>
+    <form method="POST" action="setup/submit" class="form-horizontal">
+      <fieldset>
+        <legend>Create a private feed for you and the participant.</legend>
+        <div class="control-group">
+          <label class="control-label" for="input01" >First Name</label>
+          <div class="controls">
+            <input name="first_name" type="text" class="input-xlarge" id="p_first_name">
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="input01">Last Name</label>
+          <div class="controls">
+            <input name="last_name" type="text" class="input-xlarge" id="p_last_name">
+           </div>
+        </div>     
+
+        <div class="control-group">          
+          <label class="control-label" for="input01">Email Address</label>
+          <div class="controls">
+            <input name="email_address" type="text" class="input-xlarge" id="p_email_address">
+           </div>
+        </div>    
+
+        <div class="control-group">                          
+          <label class="control-label" for="input01">Phone Number</label>
+          <div class="controls">
+            <input name="phone_number" type="text" class="input-xlarge" id="p_phone_number">          
+          </div>
+        </div> 
+
+      </fieldset>
+      <button class="btn btn-custom" type="submit" id="add_participant">Add participant</button>
+      <button class="btn btn-success" type="submit" id="go_to_feed">Done</button>      
+      <a class="btn" type="" href="/feed">Cancel</a>
+    </form>
+  </div>
+
+
+  <div id="splash-login" class="splash">
         <h1>YOUx Research</h1><br>
         <p>YOUx Research is a web application that helps researchers efficiently manage user diary studies. 
            Each study participant is automatically assigned a unique email. Posting a new diary entry is as 
@@ -57,10 +127,14 @@
   		  <input name="email" id="email" type="text" class="span6" placeholder="Email"><p>
   		  <input name="password" id="password" type="password" class="span6" placeholder="Password"><p>		
         <div id="signupfields"></div>
-    	<button type="submit" id="signup" class="btn btn-primary btn-large btn-custom">Sign Up &raquo;</button>
+        
+        <div class="alert alert-error" id="login-error" hidden="true">
+        
+        </div>
+    	<button type="submit" id="signup" class="btn btn-primary btn-large btn-custom" hidden="true">Sign Up &raquo;</button>
       <button type="submit" id="login" class="btn btn-primary btn-large btn-custom">Login &raquo;</button>
     	<div id="or-signup">Don't have an account? <a href="#" id="showsignup">Sign up here.</a></div>
-      <div id="or-login">Already have an account? <br><a href="#" id="showlogin">Log In here.</a></div>
+      <div id="or-login" hidden="true">Already have an account? <br><a href="#" id="showlogin">Log In here.</a></div>
       </form>
     </div>
 
@@ -68,21 +142,129 @@
 
       $(function(){
 
-        $("#signup").hide();
-        $("#or-login").hide();
+        Study = Parse.Object.extend("Study");
+        StudyAccess = Parse.Object.extend("StudyAccess");
+        Participant = Parse.Object.extend("Participant");
+        
+
+        $("#password").keypress(function(event) {
+            if ( event.which == 13 ) {
+               window.login();
+            }
+         });
+        // $("#or-login").hide();
 
         Parse.initialize("IjTmpLYQk8sI3Vhhv2IbCprhrZ4pCnpy9yELySQ8", "I9JnUSqpP9bcqhpwIialhWZGcNtXTCTnKzqZqWwq");
 
+
+
+        window.login = function() {
+          $("#splash-login").slideUp('fast', function() {
+
+            Parse.User.logIn($("#email").val(), $("#password").val(), {
+              success: function(user) {
+                // define currentUser session variable 
+                window.currentUser = Parse.User.current();
+
+                var study = new Parse.Query(Study);
+                study.equalTo("creator", window.currentUser);
+                study.find({
+                  success: function(studyQueryResult) {
+                    window.currentStudy = studyQueryResult[0];
+                    if (studyQueryResult.length > 0) { 
+                      window.location = "/feed";
+                    } else { 
+                      window.createStudy();
+                    }
+                  },
+                  error: function(error) {
+                    // Show the error message somewhere and let the user try again.
+                    alert("Error: " + error.code + " " + error.message);
+                  }
+                });
+
+                // var Study = Parse.Object.extend("StudyAccess");
+                // var studyQuery = new Parse.Query(Study);
+
+                // studyQuery.equalTo("user", window.currentUser);
+                // studyQuery.find({
+                //   success: function(studyQueryResult) {
+                //     //alert("Successfully retrieved " + results.length + " scores.");
+                //     if (studyQueryResult.length == 1) {
+                //       // user already has ONE study them them; go to that study
+                //       window.location = "/feed";
+                //     } else if (studyQueryResult.length > 1) {
+                //       // user already has MORE THAN ONE study them them; let them pick a study
+
+                //     } else {
+                //       window.createStudy();
+                //     }
+
+                //   },
+                //   error: function(error) {
+                //     alert("Error: " + error.code + " " + error.message);
+                //   }
+                // });
+              },
+              error: function(user, error) {
+                // Login Failed 
+                window.loginFail(error);
+                // alert("Error: " + error.code + " " + error.message);
+              }
+            });
+
+          }); //end slideup
+          return false;
+        }
+
+
+        window.loginFail = function (error) {
+          var self = this;
+          
+          $("#splash-login").slideDown('fast', function() {
+            $("#login-error").show().empty().append("Incorrect username or password. Try again?");
+              // alert("Error: " + self.error.code + " " + self.error.message);
+
+            
+          });
+        }
+
+        window.createStudy = function () {
+          var study = new Study();
+          study.set("name", window.currentUser.get('firstName') + "'s User Study");
+          study.set("email", window.currentUser.get('email'));
+          study.set("phone", window.currentUser.get('phone'));
+          study.set("creator", currentUser);
+          // ** CHANGE WHEN ENABLING "ADD MULTIPLE STUDIES" FEATURE **
+          study.save(null, {
+            success: function(study) {
+              //StudyAccess is for later use case for researcher to
+              //grant access to other researchers
+              
+              var access = new StudyAccess();
+              access.set("study", study);
+              access.set("user", currentUser);
+              access.save();
+              access.save(null, {
+                success: function(access) {
+                  
+                  window.showAddParticipant();
+
+                }, 
+                error: function(study, error) {}
+              });
+            },
+            error: function(study, error) {
+              // The save failed.
+              // error is a Parse.Error with an error code and description.
+            }
+          });
+        }
+
+
         $("#login").click(function(e) {
           e.preventDefault();
-          var myemail = $("#email").val();
-          var mypass = $("#password").val();
-          Parse.User.logIn(myemail, mypass, {
-            success: function(user) {
-              window.location = "/feed";
-            },
-            error: function(user, error) {}
-          });
+          window.login();
         });
 
         $("#signup").click(function(e) {
@@ -98,17 +280,11 @@
           user.signUp(null, {
             success: function(user) {
               //login
-              Parse.User.logIn($("#email").val(), $("#password").val(), {
-                success: function(user) {
-                  window.location = "/feed";
-                },
-                error: function(user, error) {}
-              });
-            
+              window.login();
             },
             error: function(user, error) {
               // Show the error message somewhere and let the user try again.
-              alert("Error: " + error.code + " " + error.message);
+              // alert("Error: " + error.code + " " + error.message);
             }
           });
         });
@@ -134,6 +310,102 @@
           $("#or-signup").show();
           $("#or-login").hide();
         });
+
+        $('#add_participant').click(function(e){
+
+          e.preventDefault();
+          
+          var participant = new Participant();
+
+          participant.set("firstName", $("#p_first_name").val());
+          participant.set("lastName", $("#p_last_name").val());
+          participant.set("email", $("#p_email_address").val());
+          participant.set("phoneNumber", $("#p_phone_number").val());          
+          participant.set("creator", currentUser);
+          participant.set("study", window.currentStudy);     
+
+          participant.save(null, {
+            success: function(participant) {          
+            window.createEmail(participant,window.currentStudy);
+              // save the participant 
+              // go back to the same page
+            }
+          });
+        });
+
+        $('#go_to_feed').click(function(e){
+          e.preventDefault();
+          window.location = "feed";
+        });
+
+        window.getCurrentStudy = function() {
+          
+       
+        }
+        
+        window.createEmail = function(current_participant,current_study) {
+          var Email = Parse.Object.extend("Email");
+          var email = new Email();
+          email.set("subject", "Welcome to UserDiary!");
+          email.set("fromEmail", "admin@userdiary.com");
+          email.set("toEmail", currentUser.get('email'));
+          email.set("body", "Welcome to UserDiary! This is your first Diary entry sent by the site administrator!");
+          email.set("participant", current_participant);
+          email.set("study", current_study);
+          email.save(null, {
+            success: function(email) {
+              //alert("done!");
+            }
+          });
+        }
+
+        window.showAddStudy = function () {
+          //$("#splash-setup").show();
+          $("#splash-add-study").slideDown('fast', function() {
+
+            // Animation complete.
+          });
+        }
+
+        window.showAddParticipant = function () {
+          window.getCurrentStudy();
+
+          $("#splash-add-participant").slideDown('fast', function() {
+
+            // Animation complete.
+          });
+        }
+
+
+
+        window.setup = function () {
+          var study = new Study();
+
+          study.set("name", $("#studyname").val());
+          study.set("email", $("#studyemail").val());
+          study.set("phone", $("#studyphone").val());
+          study.set("creator", currentUser);
+          study.save(null, {
+            success: function(study) {
+              var access = new StudyAccess();
+              access.set("study", study);
+              access.set("user", currentUser);
+              access.save();
+              access.save(null, {
+                success: function(access) {
+                  
+                  window.ShowSubmitParticipants();
+
+                }, 
+                error: function(study, error) {}
+              });
+            },
+            error: function(study, error) {
+              // The save failed.
+              // error is a Parse.Error with an error code and description.
+            }
+          });
+        }
 
 
     });

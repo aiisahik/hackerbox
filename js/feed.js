@@ -1,6 +1,5 @@
 $(function(){
 
-
   Parse.initialize("IjTmpLYQk8sI3Vhhv2IbCprhrZ4pCnpy9yELySQ8", "I9JnUSqpP9bcqhpwIialhWZGcNtXTCTnKzqZqWwq");
   var currentUser = Parse.User.current();
   if (currentUser) {
@@ -8,14 +7,15 @@ $(function(){
   } else {
       window.location = "/";
   }
-
+  
 
     // Participant Model
     // ----------
 
    Participant = Parse.Object.extend("Participant");
    window.Participants = Parse.Collection.extend({
-      model: Participant
+      model: Participant,
+      query: (new Parse.Query(Participant)).equalTo("study", window.currentStudy)
    });
 
    Email = Parse.Object.extend("Email");
@@ -74,6 +74,7 @@ $(function(){
           var Email = Parse.Object.extend("Email");
           window.query = new Parse.Query(Email);
           window.query.equalTo("participant",participant);
+          window.query.equalTo("study",window.currentStudy);
           window.query.descending('updatedAt');
 
           // window.query.equalTo("toEmail","jie.z.zhou@gmail.com");
@@ -200,11 +201,22 @@ $(function(){
          '': 'home'
       },
       initialize: function() {
-         // should instantiate root level views
+        // should instantiate root level views
+       
+
       },
 
       home: function() {
-         this.getData();
+        var self = this;
+        var Study = Parse.Object.extend("Study");
+        var study = new Parse.Query(Study);
+        study.equalTo("creator", currentUser);
+        study.find({
+          success: function(studyResult) {
+              window.currentStudy = studyResult[0];
+              self.getData();
+          }
+        });
       },
 
       render: function(){
@@ -213,10 +225,15 @@ $(function(){
 
       getData: function(){
         var self = this;
-         window.participants = new Participants();
-         window.participants.fetch({
+         window.participants = new window.Participants();
 
-          
+        
+        // var participant_query = new Parse.Query(Participants);
+        // participant_query.equalTo("study",window.currentStudy);
+        // //participant_query.descending('firstName');
+
+        // window.participants = participant_query.collection();
+         window.participants.fetch({  
           success: function(collection) {
               var container = $('#participant-container');
               var main = $('#main-tab-content');
@@ -234,6 +251,7 @@ $(function(){
            },
            error: function(collection, error) {
              // The collection could not be retrieved.
+             alert(error.message);
            }
          });
       }

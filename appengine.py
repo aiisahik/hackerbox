@@ -138,6 +138,7 @@ class EmailAjaxHandler(webapp2.RequestHandler):
 class FeedHandler(webapp2.RequestHandler):
     def get(self):
 		path = os.path.join(os.path.dirname(__file__), 'feed2.html')
+		self.response.headers['Access-Control-Allow-Origin'] = '*' #this is a hack - remove in production version
 		self.response.out.write(template.render(path,{}))
 
 app = webapp2.WSGIApplication([

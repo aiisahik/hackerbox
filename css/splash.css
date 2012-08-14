@@ -6,11 +6,28 @@ html {
 	background-size: cover;
 }
 
-#splash-text {
+#splash-login {
     width:300px;
     position:absolute;
     right:100px;
     top:0px;;
+}
+
+#splash-add-study {
+    width:500px;
+    position:absolute;
+    right:100px;
+    top:0px;;
+}
+
+#splash-add-participant {
+    width:500px;
+    position:absolute;
+    right:100px;
+    top:0px;;
+}
+
+.splash {
     padding:20px;
     background:url('../images/bg.gif');
     box-shadow: 0 1px 5px rgba(34, 25, 25, 0.4);
@@ -20,6 +37,7 @@ html {
     text-shadow:0 1px 0 #FFFFFF;
     font-size:14px;
 }
+
 
 
 input.span6, textarea.span6, .uneditable-input.span6 {
