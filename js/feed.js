@@ -211,9 +211,9 @@ $(function(){
         var Study = Parse.Object.extend("Study");
         var study = new Parse.Query(Study);
         study.equalTo("creator", currentUser);
-        study.find({
+        study.first({
           success: function(studyResult) {
-              window.currentStudy = studyResult[0];
+              window.currentStudy = studyResult;
               self.getData();
           }
         });

@@ -54,6 +54,39 @@ class ParseBase(object):
         date_string = date_string[:-1] + 'UTC'
         date = datetime.datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%S.%f%Z")
         return date
+        
+    def _convertToParseType(self, prop):
+        key, value = prop
+
+        if type(value) == ParseObject:
+            value = {'__type': 'Pointer',
+                    'className': value._class_name,
+                    'objectId': value._object_id}
+        elif type(value) == datetime.datetime:
+            value = {'__type': 'Date',
+                    'iso': value.isoformat()[:-3] + 'Z'} # take off the last 3 digits and add a Z
+        elif type(value) == ParseBinaryDataWrapper:
+            value = {'__type': 'Bytes',
+                    'base64': base64.b64encode(value)}
+
+        return (key, value)
+
+    def _getJSONProperties(self, prop_list):
+
+        properties_list = prop_list
+
+        # filter properties that start with an underscore
+        properties_list = filter(lambda prop: prop[0][0] != '_', properties_list)
+
+        #properties_list = [(key, value) for key, value in self.__dict__.items() if key[0] != '_']
+
+        properties_list = map(self._convertToParseType, properties_list)
+        logging.info(properties_list)
+
+        properties_dict = dict(properties_list)
+        json_properties = json.dumps(properties_dict)
+
+        return json_properties
 
 
 class ParseObject(ParseBase):
@@ -111,21 +144,7 @@ class ParseObject(ParseBase):
 
         self.__dict__.update(attrs_dict)
 
-    def _convertToParseType(self, prop):
-        key, value = prop
-   
-        if type(value) == ParseObject:
-            value = {'__type': 'Pointer',
-                    'className': value._class_name,
-                    'objectId': value._object_id}
-        elif type(value) == datetime.datetime:
-            value = {'__type': 'Date',
-                    'iso': value.isoformat()[:-3] + 'Z'} # take off the last 3 digits and add a Z
-        elif type(value) == ParseBinaryDataWrapper:
-            value = {'__type': 'Bytes',
-                    'base64': base64.b64encode(value)}
 
-        return (key, value)
 
     def _convertFromParseType(self, prop):
         key, value = prop
@@ -142,22 +161,7 @@ class ParseObject(ParseBase):
 
         return (key, value)
 
-    def _getJSONProperties(self):
-
-        properties_list = self.__dict__.items()
-
-        # filter properties that start with an underscore
-        properties_list = filter(lambda prop: prop[0][0] != '_', properties_list)
-
-        #properties_list = [(key, value) for key, value in self.__dict__.items() if key[0] != '_']
-
-        properties_list = map(self._convertToParseType, properties_list)
-        logging.info(properties_list)
-        
-        properties_dict = dict(properties_list)
-        json_properties = json.dumps(properties_dict)
-
-        return json_properties
+    
 
     def _create(self):
         # URL: /1/classes/<className>
@@ -165,7 +169,7 @@ class ParseObject(ParseBase):
 
         uri = '/%s' % self._class_name
 
-        data = self._getJSONProperties()
+        data = self._getJSONProperties(self.__dict__.items())
 
         response_dict = self._executeCall(uri, 'POST', data)
         
@@ -178,7 +182,7 @@ class ParseObject(ParseBase):
 
         uri = '/%s/%s' % (self._class_name, self._object_id)
 
-        data = self._getJSONProperties()
+        data = self._getJSONProperties(self.__dict__.items())
 
         response_dict = self._executeCall(uri, 'PUT', data)
 
@@ -250,7 +254,7 @@ class ParseQuery(ParseBase):
             options = dict(self._options) # make a local copy
             if self._where:
                 # JSON encode WHERE values
-                where = json.dumps(self._where)
+                where = self._getJSONProperties(self._where.items())
                 options.update({'where': where})
 
             uri = '/%s?%s' % (self._class_name, urllib.urlencode(options))

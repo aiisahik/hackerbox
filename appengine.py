@@ -60,7 +60,6 @@ class EmailHandler(webapp2.RequestHandler):
 		path = os.path.join(os.path.dirname(__file__), 'email.html')
 		# participant = parsepy.ParseQuery("Participant")
 		self.response.out.write(template.render(path,{}))
-		logging.info('sending email:')
 
 	# def post(self):
 	# 	pass
@@ -69,9 +68,11 @@ class EmailSubmitHandler(webapp2.RequestHandler):
     def post(self):
 		s = sendgrid.Sendgrid('jinxdabinx', 'sendgrid', secure=True) 
 		# include user and password
+		studyId = self.request.get('studyId')
+		study = parsepy.ParseQuery('Study').get(studyId)
 		q = parsepy.ParseQuery("Participant")
+		q.eq('study', study)
 		Participants = q.fetch()
-		logging.info('sending email:')
 
 		for p in Participants:
 			if self.request.get('check_'+p.email) == "on" :
@@ -81,14 +82,15 @@ class EmailSubmitHandler(webapp2.RequestHandler):
 				emailObject.subject = self.request.get('subject')
 				emailObject.body = self.request.get('body').replace('%firstname%',p.firstName)
 				emailObject.toEmail = p.email
-				emailObject.fromEmail = self.request.get('researcher_email')
+				emailObject.fromEmail = self.request.get('researcher_email')					
+				emailObject.study = study
 				plaintext = emailObject.body
 				html = emailObject.body.replace("/n","<br>")
 				emailObject.save()
 
 				logging.info('sending email: ' + plaintext)
 
-				message = sendgrid.Message(("test@userresearchtool.appspotmail.com", "Katherine from Square"), emailObject.subject, 
+				message = sendgrid.Message(("test+" + study.objectId() + "@userresearchtool.appspotmail.com", "Katherine from Square"), emailObject.subject, 
 					plaintext , html)
 
 				message.add_to(

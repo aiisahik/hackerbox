@@ -96,7 +96,17 @@ $(function(){
       },
 
       home: function() {
-         this.getData();
+          var self = this;
+          var Study = Parse.Object.extend("Study");
+          var study = new Parse.Query(Study);
+          study.equalTo("creator", Parse.User.current());
+          study.first({
+            success: function(studyResult) {
+                window.currentStudy = studyResult;
+                $('#study-id-input').val(window.currentStudy.id);
+                self.getData();
+            }
+          });
       },
 
       render: function(){
@@ -104,30 +114,30 @@ $(function(){
       },
 
       getData: function(){
-         window.participants = new Participants();
-         window.participants.fetch({
+         var participant_query = new Parse.Query(Participant);
+         participant_query.equalTo("study",window.currentStudy);
+         participant_query.descending('firstName');
+
+         window.participants = participant_query.collection();
+          window.participants.fetch({
+             
            success: function(collection) {
-               collection.each(function(object) {
-                  console.warn(object);
-            // $(this.el).append(personView.render().el);
-               
-             });
 
-            window.participantsView = new ParticipantsView({
-               collection: window.participants
-            });
+                window.participantsView = new ParticipantsView({
+                   collection: collection
+                });
 
-            $("#participants").after(window.participantsView.render().el);
-            $("#check_all").click(function() {
+                $("#participants").after(window.participantsView.render().el);
+                $("#check_all").click(function() {
 
-               if ($("#check_all").prop("checked")){
-                  $("#participant_table").find("input").prop("checked",true);  
+                   if ($("#check_all").prop("checked")){
+                      $("#participant_table").find("input").prop("checked",true);  
 
-               } else { 
-                  $("#participant_table").find("input").prop("checked",false);
+                   } else { 
+                      $("#participant_table").find("input").prop("checked",false);
                  
-               }
-            });
+                   }
+                });
              
            },
            error: function(collection, error) {
