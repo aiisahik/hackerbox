@@ -225,14 +225,12 @@ $(function(){
 
       getData: function(){
         var self = this;
-         window.participants = new window.Participants();
-
         
-        // var participant_query = new Parse.Query(Participants);
-        // participant_query.equalTo("study",window.currentStudy);
-        // //participant_query.descending('firstName');
+        var participant_query = new Parse.Query(Participant);
+        participant_query.equalTo("study",window.currentStudy);
+        participant_query.descending('firstName');
 
-        // window.participants = participant_query.collection();
+        window.participants = participant_query.collection();
          window.participants.fetch({  
           success: function(collection) {
               var container = $('#participant-container');
@@ -241,16 +239,9 @@ $(function(){
                  var pView = new ParticipantView({model: object, parentId: 'main-tab-content'});                 
                  var lnItem = new LeftNavItem({model: object, parentId: 'participant-container', pView: pView});                 
                  lnItem.render(index == 0);
-              });
-           
-              // window.participantsView = new ParticipantsView({
-              //    collection: window.participants
-              // });
-              // $("#participants").after(window.participantsView.render().el);
-              // self.getFeed();
+              });           
            },
            error: function(collection, error) {
-             // The collection could not be retrieved.
              alert(error.message);
            }
          });
