@@ -100,7 +100,7 @@ padding:10px;
     border-right: 1px solid #a5a5a5;
 }
 .row-fluid .span3 .well ul {
-    height: 100%;
+    
 }
 .row-fluid .span9 {
     margin-left: 220px;
@@ -155,10 +155,9 @@ padding:10px;
     margin-right:10px;
 }
 
-#researcher-name {
+a.nav-right-text {
     text-align:right;
     font-weight:bold;
-    font-family: 'Quattrocento Sans';
     color:white;
     padding-top:18px;
     margin-right:20px;
@@ -192,4 +191,55 @@ padding:10px;
 .text-p {
     text-align: left;
     padding:20px;
+}
+
+
+.modal-large {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1050;
+  width: 700px;
+  margin: -350px 0 0 -350px;
+  overflow: auto;
+  background-color: #ffffff;
+  border: 1px solid #999;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  *border: 1px solid #999;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+  -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+     -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  -webkit-background-clip: padding-box;
+     -moz-background-clip: padding-box;
+          background-clip: padding-box;
+}
+
+input[type="text"].input-email {
+  padding:10px;
+  font-size: 16px;
+  width: 450px;
+  border-radius:10px;
+    -webkit-border-radius:10px;
+    -moz-border-radius: 10px;
+}
+
+textarea.input-email {
+  padding:10px;
+  font-size: 16px;
+  width: 450px;
+  border-radius:10px;
+    -webkit-border-radius:10px;
+    -moz-border-radius: 10px;
+}
+
+.form-label-text { 
+  font-family: 'Quattrocento Sans', sans-serif;
+  font-size: 16px;
+  float: left;
+  width: 140px;
+  padding-top: 5px;
+  text-align: right;
 }

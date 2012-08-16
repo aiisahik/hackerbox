@@ -1,65 +1,284 @@
-<!doctype html>
-<head>
-  <meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Researcher Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Example of Fluid Layout with Twitter Bootstrap version 2.0 from w3resource.com">
+    <meta name="author" content="">
 
-  <title>Feed</title>
-  <meta name="description" content="My Parse App">
-  <meta name="viewport" content="width=device-width">
-  
-  <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/bootstrap.css">
-  <link rel="stylesheet" href="css/styles.css">
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.0.14.min.js"></script>
-  <script src="/js/underscore.js" type="text/javascript"></script> 
-  <script src="/js/backbone.js" type="text/javascript"></script> 
-  <script src="/js/json2.js" type="text/javascript"></script> 
-  <script src="/js/feed.js" type="text/javascript"></script> 
-  <script type="text/javascript" src="//use.typekit.net/cgr6ryz.js"></script>
-  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>    
-  <script type="text/template" id="">
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+	<link href="css/styles.css" rel="stylesheet">		    
+	<link href="css/feed.css" rel="stylesheet">	
+	
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="twitter-bootstrap-v2/docs/examples/images/favicon.ico">
+    <link rel="apple-touch-icon" href="twitter-bootstrap-v2/docs/examples/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="twitter-bootstrap-v2/docs/examples/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="twitter-bootstrap-v2/docs/examples/images/apple-touch-icon-114x114.png">
     
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+      <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.0.14.min.js"></script>
+      <script src="/js/underscore.js" type="text/javascript"></script> 
+      <script src="/js/backbone.js" type="text/javascript"></script> 
+      <script src="/js/bootstrap-tab.js" type="text/javascript"></script>       
+      <script src="/js/json2.js" type="text/javascript"></script> 
+      <script src="/js/date-format.js" type="text/javascript"></script> 
+      <script src="/js/feed.js" type="text/javascript"></script>
+      <script src="/js/bootstrap-dropdown.js" type="text/javascript"></script>
+      <script src="/js/bootstrap-modal.js" type="text/javascript"></script>
+      <script src="/js/tooltip.js" type="text/javascript"></script>
+    	
+      <link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans:400,700' rel='stylesheet' type='text/css'>
 
-  </script>
 
-</head>
 
-<body>
-  <div class="navbar">
-    <div class="navbar-inner">
-      <div class="container">
-        <ul class="nav">
-          <li><a href="#"><img src="images/button_email.png"</a></li>
-          <li><a href="#">Link</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  
-  <div class="feed">
-    <div class="subheader">
-      <ul>
-        <li>
-    </div>
-    <div class="posts">
-      <div class="post user-post triangle-border left">
-        
-        <img src="images/sample.jpeg" />
-        <div class="text">I’m as busy as ever running businesses. One thing that keeps me going is my dog Doobers. This is a special pic and a great pic of us. He lets me do this at parties!!!
+<!-- left particpiant list template --> 
+    <script id="participant-li-template" type="text/template">
+    
+        <a class="target" href="#tab-<%= id %>" data-toggle="tab"><img class="profile-image thumbnail" src="images/default_profile_image.png" /><span class="nav-name"><%= firstName %> <%= lastName %></span></a>
+    </script>
+<!-- very small template - do we really need this? -->    
+    <script id="feed-container-template" type="text/template">
+      <br>
+      <div class="posts"></div>
+    </script>
+
+<!-- Feed Entry template --> 
+    <script id="feed-template" type="text/template">
+        <div style="overflow: hidden">            
+            <div class="date-container" style="float:left">
+                <% if (!isResearcher) { %>
+                <div class="month"><%= month %></div>
+                <div class="day"><%= day %></div>
+                <div class="time"><%= time %></div>            
+                <% } else { %>                
+                    &nbsp;
+                    <% } %>
+            </div>
+            <div style="float: left" class="post <% if (isResearcher) { %>researcher<% } else { %>user<% } %>-post triangle-border <% if (isResearcher) { %>right<% } else { %>left<% } %>">
+                <% if (attachments) { %>
+                    <% for (var i = 0; i < attachments.length; i++) { %>
+                        <div><img style="width: 510px" src="<%= attachments[i] %>"></div>
+                    <% } %>
+                <% } %>
+                <div class="text-<%= type %>">
+                  <%= body %>
+                  <% if (!isResearcher) { %>
+                    <br><br><a class="btn btn-info" style="float:right;" href="#">Reply</a>
+                  <% } %>
+          
+                </div>
+            </div>
+            <div class="date-container" style="float:left">
+                <% if (isResearcher) { %>            
+                <div class="month"><%= month %></div>
+                <div class="day"><%= day %></div>
+                <div class="time"><%= time %></div>            
+                <% } else { %>                
+                    &nbsp;
+                    <% } %>
+            </div>
         </div>
-      	
+        <div id="reply-container-<%= id %>"></div>
+    </script>
+
+<!-- Researcher Notes template --> 
+    <script id="feed-reply-template" type="text/template">
+      <br>
+      <div class="reply" id="replyemail">
+        <form method="POST" action="email/submit" class="form-horizontal">
+          <fieldset>
+              <legend>Reply to </legend>
+              <div class="control-group">
+                <label class="control-label" for="input01">Subject</label>
+                <div class="controls">
+                  <input name="subject" type="text" class="reply-body" id="emailsubject" value="<%= subject %>">
+                </div>
+              </div>
+              <div class="control-group post">
+                <label class="control-label" class="reply-body" for="textarea">Email:</label>
+                <div class="controls" style="text-align:left;">
+                  <textarea class="reply-body" id="emailbody" rows="5"></textarea>
+                  <br>
+                  <br>
+                  <a href="#" style="float:right; margin-left:10px;" class="btn btn-submit">Cancel</a>
+                  <a href="#" style="float:right;" class="btn btn-success">Submit</a> 
+                </div>
+              </div>
+            </legend>
+          </fieldset>
+        </form>
       </div>
-      <div class="post researcher-post triangle-border right">
-        <div class="text">HELLO</div>
+    </script>
+  
+<!-- Send Email template --> 
+  <script id="sendEmail-template" type="text/template">
+    <form method="POST" action="email/submit" class="form-horizontal">
+      <fieldset>
+          <legend>Email body</legend>
+          <div class="control-group">
+            <label class="control-label" for="input01">Subject</label>
+            <div class="controls">
+              <input name="subject" type="text" class="input-xlarge" id="input01"/>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="textarea">Email Body</label>
+            <div class="controls">
+                <textarea name="body" class="input-xlarge" id="textarea" rows="10">Hi %firstname%,</textarea>
+            </div>
+          </div>
+      </fieldset>
+      <input name="researcher_email" type="hidden" class="input-xlarge" id="input01" value="<%= email %>"/>
+      <input name="studyId" type="hidden" id="study-id-input" value="" />
+    </form>
+  </script>
+
+  <script type="text/template" id="participantEmailList-template">
+    <tr>
+      <td><input name="check_<%= email %>" type="checkbox"></td>
+      <td><%= firstName %> <%= lastName %></td>
+      <td><%= email %></td>
+      <td><%= phoneNumber %></td>
+    <tr>
+  </script>
+
+
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <ul class="nav pull-right">
+          <li class="" id="researcher-nav"><img class="thumbnail" id="researcher-image" src="images/profile1.jpg" /></li>
+          <li><a href="#" id="researcher-name" class="nav-right-text"></a></li>
+          <li><a href="#" id="logout" class="nav-right-text">Log Out</a></li>
+         </ul>
       </div>
     </div>
-  </div>  
+   
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
 
-  <script type="text/javascript">
-  
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list" height="40px">
+              <li class="nav-header" id="participant-header">Participants 
+                <span>
+                  <a href="#" id="showAddParticipant"><img id="action-add" class="icon" rel="tooltip" src="../images/icon_add.png" /></a>
+                  <a href="#" id="showSendEmail"><img class="icon" id="action-email" rel="tooltip" src="../images/icon_email.png" /></a>
+                </span>
+              </li>  
+            </ul>
+            <ul class="nav nav-list" id="participant-container">
+                
+           </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+         <div class="subheader">
+           <div id="sort-by" class="btn-group dropdown">
+             <button class="btn btn-small">Sort by</button>
+             <button class="btn dropdown-toggle" data-toggle="dropdown">
+               <span class="caret"></span></button>
+             <ul class="dropdown-menu">
+               <li><a href="#">Oldest to Newest</a></li>
+               <li><a href="#">Newest to Oldest</a></li>
+             </ul>
+           </div>
+          </div>
+          
+        <div class="span9">
+          <div id="main-tab-content">
+          </div>
+          <!-- hidden Add Participant Modal --> 
+          <div class="modal hide" id="addParticipantModal">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Add New Participant to Study</h3>
+          </div>
+          <div class="modal-body">
+            <form method="POST" action="setup/submit" class="form-horizontal">
+              <fieldset>
+                <div class="control-group">
+                  <label class="control-label" for="input01" >First Name</label>
+                  <div class="controls">
+                    <input name="first_name" type="text" class="input-xlarge" id="p_first_name">
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label" for="input01">Last Name</label>
+                  <div class="controls">
+                    <input name="last_name" type="text" class="input-xlarge" id="p_last_name">
+                   </div>
+                </div>     
 
+                <div class="control-group">          
+                  <label class="control-label" for="input01">Email Address</label>
+                  <div class="controls">
+                    <input name="email_address" type="text" class="input-xlarge" id="p_email_address">
+                   </div>
+                </div>    
 
-  </script>
-</body>
-
+                <div class="control-group">                          
+                  <label class="control-label" for="input01">Phone Number</label>
+                  <div class="controls">
+                    <input name="phone_number" type="text" class="input-xlarge" id="p_phone_number">          
+                  </div>
+                </div> 
+              </fieldset>
+            </form>
+          </div>
+          <div class="modal-footer">
+             <div class="alert alert-success" id="addParticipant-success" hidden="true"></div>
+            <a href="#" class="btn btn-info" id="addParticipant">Add Participant</a>
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+          </div>
+        </div>
+        <!-- hidden Send Email Modal --> 
+          <div class="modal-large hide" id="sendEmailModal">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">×</button>
+              <h3>Send Email to All Participants</h3>
+            </div>
+            <div class="modal-body">
+              <form class="form-horizontal">
+              <fieldset>
+                 <div class="control-group">
+                    <label class="form-label-text" for="emailall">To:</label>
+                    <div class="controls" id="emailToList">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="form-label-text" for="emailall">Subject</label>
+                    <div class="controls">
+                      <input name="subject" type="text" class="input-email" id="emailsubject"/>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="form-label-text" for="emailall">Email Body</label>
+                    <div class="controls">
+                      <textarea name="body" class="input-email" id="emailbody" rows="15">Hi %firstname%,</textarea>
+                    </div>
+                  </div>
+              </fieldset>
+              <div class="alert alert-success" id="sendAllEmail-info" hidden="true"></div>
+            </form>
+            </div>
+            <div class="modal-footer">
+              
+              <a href="#" class="btn btn-info" id="submitEmail">Send</a>
+              <a href="#" class="btn" data-dismiss="modal">Close</a>
+            </div>
+          </div> 
+          <!-- end modal --> 
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

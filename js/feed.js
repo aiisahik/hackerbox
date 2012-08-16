@@ -7,6 +7,11 @@ $(function(){
   } else {
       window.location = "/";
   }
+  $("#logout").click(function(e){
+    e.preventDefault();
+    Parse.User.logOut();
+    window.location = "/";
+  })
   
 
     // Participant Model
@@ -37,8 +42,8 @@ $(function(){
         render: function(activate) {
             var data = this.model.toJSON();
             data.id = this.model.id;                 
-            this.$el.html(this.template(data));
-           $('#' + this.options.parentId).append(this.$el);
+            this.$el.empty().append(this.template(data));
+           //$('#' + this.options.parentId).append(this.$el);
            if (activate) {
                this.$el.addClass('active');
                this.renderMain();
@@ -52,10 +57,6 @@ $(function(){
             this.options.pView.render();
         }
     });
-
-
-
-    
 
    ParticipantView = Backbone.View.extend({
       template: _.template($("#feed-container-template").html()),
@@ -76,8 +77,6 @@ $(function(){
           window.query.equalTo("participant",participant);
           window.query.equalTo("study",window.currentStudy);
           window.query.descending('updatedAt');
-
-          // window.query.equalTo("toEmail","jie.z.zhou@gmail.com");
           window.feed = window.query.collection();
           window.feed.fetch({
             success: function(res) {
@@ -90,7 +89,7 @@ $(function(){
           });
         },
         displayFeed: function(feedCollection,participant) {
-            $("#main-tab-content").html(this.template(participant.toJSON()));
+            $("#main-tab-content").empty().append(this.template(participant.toJSON()));
             var feedView = new FeedView({
                collection: feedCollection
             });
@@ -229,22 +228,129 @@ $(function(){
         var participant_query = new Parse.Query(Participant);
         participant_query.equalTo("study",window.currentStudy);
         participant_query.descending('firstName');
-
         window.participants = participant_query.collection();
          window.participants.fetch({  
           success: function(collection) {
-              var container = $('#participant-container');
-              var main = $('#main-tab-content');
-             collection.each(function(object, index) {                 
-                 var pView = new ParticipantView({model: object, parentId: 'main-tab-content'});                 
-                 var lnItem = new LeftNavItem({model: object, parentId: 'participant-container', pView: pView});                 
-                 lnItem.render(index == 0);
-              });           
+             self.showParticipants(collection);
            },
            error: function(collection, error) {
              alert(error.message);
            }
          });
+      }, 
+      showParticipants: function(collection){
+        $('#participant-container').empty();
+        var container = $('#participant-container');
+        var main = $('#main-tab-content');
+        collection.each(function(object, index) {                 
+          var pView = new ParticipantView({model: object, parentId: 'main-tab-content'});                 
+          var lnItem = new LeftNavItem({model: object, parentId: 'participant-container', pView: pView});                 
+          lnItem.render(index == 0);
+          $("#participant-container").append(lnItem.render().el);
+
+
+        });   
+        this.setupAddParticipants();
+        this.setupSendEmail();
+      },
+
+      setupAddParticipants: function(){
+        var self=this;
+        $("#showAddParticipant").click(function (e) {
+          e.preventDefault();
+          $('#addParticipantModal').modal('show');
+        });
+        $('#addParticipantModal').on('show', function () {
+          $('#addParticipant').click(function(e){
+            var participant = new Participant();
+            participant.set("firstName", $("#p_first_name").val());
+            participant.set("lastName", $("#p_last_name").val());
+            participant.set("email", $("#p_email_address").val());
+            participant.set("phoneNumber", $("#p_phone_number").val());          
+            participant.set("creator", currentUser);
+            participant.set("study", window.currentStudy);
+            participant.save(null, {
+              success: function(participant) {        
+                window.participants.add(participant);
+                $('#addParticipant-success').show().empty().append("Successfully added "+$("#p_first_name").val()+".");
+                $('#addParticipantModal').find("input").val("");
+              }
+            });
+          })
+        });
+        $('#addParticipantModal').on('hide', function () {
+          self.showParticipants(window.participants);
+        });
+      }, 
+      setupSendEmail: function() {
+        var self=this;
+        $("#showSendEmail").click(function (e) {
+          e.preventDefault();
+          $('#sendEmailModal').modal('show');
+         
+        });
+        $('#sendEmailModal').on('show', function () {
+          $("#sendAllEmail-info").hide().empty();
+           var $el = "";
+          _.each(window.participants.models, function(participant){
+            $el += '<a href="#" class="btn">'+participant.get('firstName')+"&nbsp"+participant.get('lastName')+"</a>&nbsp";
+          }, this);
+          $('#emailToList').empty().append($el);
+
+          $("#submitEmail").click(function (e) {
+            e.preventDefault();
+            self.emailAllParticipants();
+          });
+          //sendEmailTemplate = _.template($("#sendEmail-template").html()),
+          //$("#sendEmailModal .modal-body").empty().append(sendEmailTemplate(currentUser.toJSON()));
+          // set up list of participants to email 
+          // var $el = "";
+          // _.each(window.participants.models, function(participant){
+          //   var participantEmailListTemplate = _.template($("#participantEmailList-template").html());
+          //   $el += participantEmailListTemplate(participant.toJSON());
+          // }, this);
+          // $("#participants").after($el);
+          // $("#participant_table").find("input").prop("checked",true);
+          // $("#check_all").click(function() {
+          //    if ($("#check_all").prop("checked")){
+          //       $("#participant_table").find("input").prop("checked",true);  
+          //    } else { 
+          //       $("#participant_table").find("input").prop("checked",false);
+          //    }
+          // });
+
+        });
+      },
+      emailAllParticipants: function() {
+        $("#submitEmail").removeClass("btn-info").addClass("disabled");
+        $("#submitEmail").empty().append("Sending Emails");
+        var subject = $('#emailsubject').val();
+        var fromEmail = window.currentStudy.get('email');
+        var body = $('#emailbody').val();
+        var studyID = window.currentStudy.id;
+        var researcherName = currentUser.get('firstName');
+        var company = currentUser.get('company');
+        if (!body) {
+            alert('Please enter some text');
+            return false;
+        }
+        $.ajax({
+          url: '/emailall/ajax',
+          type: "POST",
+          data: {subject : subject, body: body, fromEmail: fromEmail, studyID: studyID, researcherName: researcherName, company:company},
+          success: function(data) {
+            //$('#sendEmailModal').modal('hide').fade();
+            $("#submitEmail").removeClass("disabled").addClass("btn-info");
+            $("#submitEmail").empty().append("Send");
+            $("#sendAllEmail-info").show().html("Emails successfully send.");
+          },
+           error: function(error) {
+             //alert(error.message);
+             $("#sendAllEmail-info").removeClass("alert-success").addClass("alert-error");
+             $("#sendAllEmail-info").show().html("Emails successfully send.");
+          }
+        });
+        return false;
       }
       
 

@@ -47,6 +47,9 @@ a:visited {
 .navbar-inner {
     background-image: url('../images/leather.jpg');
     height:55px;
+    /*background-image: -webkit-linear-gradient(top, #17213B, #0D1529);
+    background-image: -o-linear-gradient(top, #17213B, #0D1529);
+    background-image: linear-gradient(top, #17213B, #0D1529);*/
     position:relative;
     }
 

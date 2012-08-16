@@ -102,6 +102,38 @@ class EmailSubmitHandler(webapp2.RequestHandler):
 
 		self.redirect("/feed")
 
+class EmailAllAjaxHandler(webapp2.RequestHandler):
+    def post(self):
+		s = sendgrid.Sendgrid('jinxdabinx', 'sendgrid', secure=True) 
+		# include user and password
+		logging.info('body: ' + self.request.get('body'))
+		logging.info('subject: ' + self.request.get('subject'))
+		logging.info('study ID: ' + self.request.get('studyID'))
+		studyId = self.request.get('studyID')
+		study = parsepy.ParseQuery('Study').get(studyId)
+		q = parsepy.ParseQuery("Participant")
+		q.eq('study', study)
+		Participants = q.fetch()
+		for p in Participants:
+			logging.info('emailing: ' + p.email)
+			emailObject = parsepy.ParseObject("Email")
+			emailObject.participant = p
+			emailObject.subject = self.request.get('subject')
+			emailObject.body = self.request.get('body').replace('%firstname%',p.firstName)
+			emailObject.toEmail = p.email
+			emailObject.study = study
+			emailObject.fromEmail = self.request.get('fromEmail')
+			html = emailObject.body.replace("/n","<br>")
+			emailObject.save()
+			message = sendgrid.Message((emailObject.fromEmail , self.request.get('researcherName') + "@" + self.request.get('company')), emailObject.subject, 
+				emailObject.body , html)
+			message.add_to(
+				    {
+				    	p.email : {'%firstname%': p.firstName},
+				    }
+			    )
+			#s.web.send(message)
+		self.response.out.write('[{"success": "true"}]')	
 
 class EmailAjaxHandler(webapp2.RequestHandler):
     def post(self):
@@ -139,7 +171,7 @@ class EmailAjaxHandler(webapp2.RequestHandler):
 
 class FeedHandler(webapp2.RequestHandler):
     def get(self):
-		path = os.path.join(os.path.dirname(__file__), 'feed2.html')
+		path = os.path.join(os.path.dirname(__file__), 'feed.html')
 		self.response.headers['Access-Control-Allow-Origin'] = '*' #this is a hack - remove in production version
 		self.response.out.write(template.render(path,{}))
 
@@ -153,5 +185,6 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/feed', handler=FeedHandler, name='feed'),
     webapp2.Route(r'/email', handler=EmailHandler, name='email'),
     webapp2.Route(r'/email/ajax', handler=EmailAjaxHandler, name='email'),
+    webapp2.Route(r'/emailall/ajax', handler=EmailAllAjaxHandler, name='email'),
     webapp2.Route(r'/email/submit', handler=EmailSubmitHandler, name='email_submit') ])
 
