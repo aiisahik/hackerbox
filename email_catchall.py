@@ -24,11 +24,13 @@ class LogSenderHandler(InboundMailHandler):
         userResponse.fromEmail = fromEmail
         userResponse.toEmail = mail_message.to
         # we parse the to email bc it has our studyId in it
-        split_arr = string.split(mail_message.to, '+')
+        split_arr = string.split(mail_message.to, '@')
         studyId = None
         if len(split_arr) > 1:
-            sec_arr = string.split(split_arr[1], '@')
-            studyId = sec_arr[0]
+            #sec_arr = string.split(split_arr[1], '@')
+            sec_arr = string.split(split_arr[0], '_')
+            studyId = sec_arr[1]
+            logging.info('studyID: ' + studyId)
         # fetch study object and store with our email object
         if studyId:
             study = ParsePy.ParseQuery('Study').get(studyId)
