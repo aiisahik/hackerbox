@@ -42,11 +42,12 @@
 <!-- left particpiant list template --> 
     <script id="participant-li-template" type="text/template">
     
-        <a class="target" href="#tab-<%= id %>" data-toggle="tab"><img class="profile-image thumbnail" src="images/default_profile_image.png" /><span class="nav-name"><%= firstName %> <%= lastName %></span></a>
+        <a class="target" href="#tab-<%= id %>" data-toggle="tab"><img class="profile-image thumbnail" src="images/default_profile_image.png" /><span class="nav-name"><%= firstName %> <%= lastName %><br></span></a>
     </script>
 <!-- very small template - do we really need this? -->    
     <script id="feed-container-template" type="text/template">
       <br>
+      <div class="sendemail-container"> <a class="btn btn-info" href="#">Send Email</a><br><br></div>
       <div class="posts"></div>
     </script>
 
@@ -89,34 +90,37 @@
         <div id="reply-container-<%= id %>"></div>
     </script>
 
-<!-- Researcher Notes template --> 
+<!-- Send Email to individual Participant template --> 
     <script id="feed-reply-template" type="text/template">
-      <br>
-      <div class="reply" id="replyemail">
-        <form method="POST" action="email/submit" class="form-horizontal">
-          <fieldset>
-              <legend>Reply to </legend>
-              <div class="control-group">
-                <label class="control-label" for="input01">Subject</label>
-                <div class="controls">
-                  <input name="subject" type="text" class="reply-body" id="emailsubject" value="<%= subject %>">
-                </div>
+
+      <div style="overflow: hidden">            
+        <div class="date-container" style="float:left">&nbsp;</div>
+
+        <div style="float: left" class="post researcher-post triangle-border right">                
+            <div class="text-r">
+               <div id="replyemail">
+                <form method="POST" action="email/submit" class="form-horizontal">
+                Subject:  &nbsp; &nbsp;<input name="subject" type="text" class="input-email" id="emailsubject" value="<%= subject %>">
+                <br> <br> Message:  &nbsp; &nbsp;<textarea class="input-email" id="emailbody" rows="5"></textarea>
+                    <br>
+                    <br>
+                    <div class="alert alert-success" id="sendEmail-info" hidden="true"></div>
+                    <br>
+                    <a href="#" style="float:right; margin-left:10px;" class="btn btn-submit">Cancel</a>
+                    <a href="#" style="float:right;" id="sendReplyEmail" class="btn btn-success">Submit</a> 
+              </form>
               </div>
-              <div class="control-group post">
-                <label class="control-label" class="reply-body" for="textarea">Email:</label>
-                <div class="controls" style="text-align:left;">
-                  <textarea class="reply-body" id="emailbody" rows="5"></textarea>
-                  <br>
-                  <br>
-                  <a href="#" style="float:right; margin-left:10px;" class="btn btn-submit">Cancel</a>
-                  <a href="#" style="float:right;" class="btn btn-success">Submit</a> 
-                </div>
-              </div>
-            </legend>
-          </fieldset>
-        </form>
+            </div>
+        </div>
+        <div class="date-container" style="float:left">
+            <div class="month"><%= month %></div>
+            <div class="day"><%= day %></div>
+            <div class="time"><%= time %></div>              
+        </div>
       </div>
     </script>
+
+
   
 <!-- Send Email template --> 
   <script id="sendEmail-template" type="text/template">

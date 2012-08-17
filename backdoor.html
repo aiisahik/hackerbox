@@ -1,0 +1,208 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+
+  <title>UserDiary</title>
+  <meta name="description" content="YOUx Research">
+  <meta name="viewport" content="width=device-width">
+  <link href="css/bootstrap.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/splash.css">
+  
+  <link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans:400,700' rel='stylesheet' type='text/css'>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.0.14.min.js"></script>
+  <script src="/js/underscore.js" type="text/javascript"></script> 
+  <script src="/js/backbone.js" type="text/javascript"></script> 
+  <script src="/js/bootstrap-modal.js" type="text/javascript"></script>
+  
+  <script id="signup-template" type="text/template">
+
+      <input id="firstName" type="text" class="span6" placeholder="First Name"><p>
+      <input id="lastName" type="text" class="span6" placeholder="Last Name"><p>
+      <input id="company" type="text" class="span6" placeholder="Company"><p>
+      <input id="phone" type="text" class="span6" placeholder="Phone Number"><p>   
+
+    </script>
+
+</head>
+
+<body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <ul class="nav">
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div id="splash-image">
+  </div>
+  
+  <div id="splash-login">
+        <h1>UserDiary</h1><br>
+        <p>UserDiary is a web application that helps researchers efficiently manage user diary studies. 
+           Each study participant is automatically assigned a unique email. Posting a new diary entry is as 
+           simple as replying to an email. Each diary is presented as a feed to the the researcher. The researcher 
+           can communicate directly with each participant through the diary feed or send prompts and reminders to 
+           the entire cohort.
+    	</p>
+    	<br />
+
+      <form method="post"><p>
+        <div id="signuptitle"></div>
+  		  <input name="email" id="email" type="text" class="span6" placeholder="Email"><p>
+  		  <input name="password" id="password" type="password" class="span6" placeholder="Password"><p>		
+        <div id="signupfields"></div>
+        <div class="alert alert-error" id="login-error" hidden="true"></div>
+    	<button type="submit" id="signup" class="btn btn-primary btn-large btn-custom" hidden="true">Sign Up &raquo;</button>
+      <button type="submit" id="login" class="btn btn-primary btn-large btn-custom">Login &raquo;</button><br><br><br>
+      <div id="or-signup">Don't have an account? <a href="#" id="showsignup">Sign up here.</a></div><br><br>
+    	<div>UserDiary is opening accounts on a limited basis. <br><button type="submit" id="showRequestInvite" class="btn btn-primary btn-large btn-custom">Request an Invitation</button></div>
+
+      </form>
+    </div>
+
+    <div class="modal-large hide" id="requestModal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+          <h3>Request Invitation to UserDiary</h3>
+      </div>
+      <div class="modal-body">
+        <div class="request-invitation">
+          Dear UserDiary, <br> 
+
+          My name is <input type="text" class="input-request" id="requestName"/>
+          and I heard about UserDiary.com from <input type="text" class="input-request" id="requestHeardFrom"/>. 
+          Please email me at <input type="text" class="input-request" id="requestEmail"/> when UserDiary is ready.
+
+        </div>
+        <div class="alert alert-success" id="request-info" hidden="true"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-info btn-large btn-custom" id="submitRequest">Request</button>
+        <button href="#" class="btn btn-large" data-dismiss="modal">Close</button>
+      </div>
+    </div> 
+
+      <script type="text/javascript">
+
+      $(function(){
+
+        $("#password").keypress(function(event) {
+            if ( event.which == 13 ) {
+               window.login();
+            }
+         });
+
+        Parse.initialize("IjTmpLYQk8sI3Vhhv2IbCprhrZ4pCnpy9yELySQ8", "I9JnUSqpP9bcqhpwIialhWZGcNtXTCTnKzqZqWwq");
+
+        $("#login").click(function(e) {
+          e.preventDefault();
+          $("#splash-login").slideUp('fast', function() {
+            window.login();
+          });
+        });
+
+        window.login = function (){
+          var myemail = $("#email").val();
+          var mypass = $("#password").val();
+          Parse.User.logIn(myemail, mypass, {
+            success: function(user) {
+              window.location = "/feed";
+            },
+            error: function(user, error) {
+              window.loginFail(error);
+            }
+          });
+        }
+
+        window.loginFail = function (error) {
+          var self = this;
+          $("#splash-login").slideDown('fast', function() {
+            $("#login-error").show().empty().append("Incorrect username or password. Try again?");
+          });
+        }
+
+        $("#signup").click(function(e) {
+          e.preventDefault();
+          var user = new Parse.User();
+          user.set("firstName", $("#firstName").val());
+          user.set("lastName", $("#lastName").val());
+          user.set("company", $("#company").val());
+          user.set("username", $("#email").val());
+          user.set("email", $("#email").val());
+          user.set("phone", $("#phone").val());
+          user.set("password", $("#password").val());
+          user.signUp(null, {
+            success: function(user) {
+              //login
+              Parse.User.logIn($("#email").val(), $("#password").val(), {
+                success: function(user) {
+                  window.location = "/feed";
+                },
+                error: function(user, error) {}
+              });
+            
+            },
+            error: function(user, error) {
+              // Show the error message somewhere and let the user try again.
+              alert("Error: " + error.code + " " + error.message);
+            }
+          });
+        });
+
+        $("#showRequestInvite").click(function(e) {
+          e.preventDefault();
+          $('#requestModal').modal('show');
+        });
+
+        $('#requestModal').on('show', function () {
+          $('#submitRequest').click(function(e){
+            e.preventDefault();
+            var InviteRequest = Parse.Object.extend("InviteRequest");
+            var request = new InviteRequest();
+            request.set("name", $("#requestName").val());
+            request.set("email", $("#requestEmail").val());
+            request.set("heardFrom", $("#requestHeardFrom").val());
+            request.save(null, {
+              success: function(request) {        
+                $('#request-info').show().empty().append("Thanks, "+$("#requestName").val()+". <br>We will send you an email for an initation when UserDiary is ready!");
+              }
+            });
+          });
+        });
+
+        $("#showsignup").click(function(e) {
+          e.preventDefault();
+          var fields_template = _.template($('#signup-template').html());
+          $("#signupfields").append(fields_template({}));
+          $("#signuptitle").empty().append("<h2>Sign Up: </h2>");
+          $("#signup").show();
+          $("#login").hide();
+          $("#or-signup").hide();
+          $("#or-login").show();
+
+        });
+
+        $("#showlogin").click(function(e) {
+          e.preventDefault();
+          $("#signuptitle").empty().append("<h2>Log In: </h2>");
+          $("#signupfields").empty();
+          $("#signup").hide();
+          $("#login").show();
+          $("#or-signup").show();
+          $("#or-login").hide();
+        });
+
+
+    });
+
+
+  </script>
+
+</body>
+
+</html>

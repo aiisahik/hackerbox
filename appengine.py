@@ -39,6 +39,16 @@ class LoginHandler(webapp2.RequestHandler):
 		path = os.path.join(os.path.dirname(__file__), 'login.html')
 		self.response.out.write(template.render(path,{}))
 
+class BackDoorHandler(webapp2.RequestHandler):
+    def get(self):
+		path = os.path.join(os.path.dirname(__file__), 'backdoor.html')
+		self.response.out.write(template.render(path,{}))
+
+class DemoHandler(webapp2.RequestHandler):
+    def get(self):
+		path = os.path.join(os.path.dirname(__file__), 'demologin.html')
+		self.response.out.write(template.render(path,{}))
+
 class SetupHandler(webapp2.RequestHandler):
 	# a page for user email / first/last name / phone
     def get(self):
@@ -61,8 +71,6 @@ class EmailHandler(webapp2.RequestHandler):
 		# participant = parsepy.ParseQuery("Participant")
 		self.response.out.write(template.render(path,{}))
 
-	# def post(self):
-	# 	pass
 
 class EmailSubmitHandler(webapp2.RequestHandler):
     def post(self):
@@ -122,43 +130,57 @@ class EmailAllAjaxHandler(webapp2.RequestHandler):
 			emailObject.body = self.request.get('body').replace('%firstname%',p.firstName)
 			emailObject.toEmail = p.email
 			emailObject.study = study
-			emailObject.fromEmail = self.request.get('fromEmail')
+			#emailObject.fromEmail = self.request.get('fromEmail')
+			emailObject.fromEmail = self.request.get('researcherName') + "+" + study.objectId() + "@userresearchtool.appspotmail.com"
 			html = emailObject.body.replace("/n","<br>")
 			emailObject.save()
-			message = sendgrid.Message((emailObject.fromEmail , self.request.get('researcherName') + "@" + self.request.get('company')), emailObject.subject, 
-				emailObject.body , html)
+			message = sendgrid.Message((emailObject.fromEmail, 
+				self.request.get('researcherName') + "@" + self.request.get('company')), 
+				emailObject.subject, 
+				emailObject.body, 
+				html)
+
 			message.add_to(
 				    {
 				    	p.email : {'%firstname%': p.firstName},
 				    }
 			    )
-			#s.web.send(message)
-		self.response.out.write('[{"success": "true"}]')	
+			s.web.send(message)
+		#self.response.out.write('[{"success": "true"}]')	
 
 class EmailAjaxHandler(webapp2.RequestHandler):
     def post(self):
+    	# setup SENDGRID include user and password
 		s = sendgrid.Sendgrid('jinxdabinx', 'sendgrid', secure=True) 
-		# include user and password
-		p = parsepy.ParseQuery("Participant").get(self.request.get('participantID'))
-		toEmail = self.request.get('toEmail')
-		
-		#Participants = q.fetch()
-		logging.info('sending email:'+toEmail)
 
 		emailObject = parsepy.ParseObject("Email")
+
+		# -- setup study object 
+		study = parsepy.ParseQuery('Study').get(self.request.get('studyID'))
+		emailObject.study = study
+		# -- setup participant 
+		p = parsepy.ParseQuery("Participant").get(self.request.get('participantID'))
 		emailObject.participant = p
+		emailObject.toEmail = p.email
+		#Participants = q.fetch()
+		#toEmail = self.request.get('toEmail')
+		
 		emailObject.subject = self.request.get('subject')
 		emailObject.body = self.request.get('body').replace('%firstname%',p.firstName)
-		emailObject.toEmail = p.email
-		emailObject.fromEmail = self.request.get('researcher_email')
+		#emailObject.fromEmail = self.request.get('fromEmail')
+		emailObject.fromEmail = self.request.get('researcherName')+"+"+ study.objectId() + "@userresearchtool.appspotmail.com"
+
 		plaintext = emailObject.body
 		html = emailObject.body.replace("/n","<br>")
 		emailObject.save()
 
+		logging.info('sending to :'+emailObject.toEmail)
 		logging.info('sending email: ' + plaintext)
-
-		message = sendgrid.Message(("test@userresearchtool.appspotmail.com" , "Katherine from Square"), emailObject.subject, 
-			plaintext , html)
+		logging.info('study ID: ' + self.request.get('studyID'))
+		
+		message = sendgrid.Message((emailObject.fromEmail , self.request.get('researcherName') + "@" + self.request.get('company')), emailObject.subject, 
+				plaintext , html)
+		# message = sendgrid.Message(("test@userresearchtool.appspotmail.com" , "Katherine from Square"), emailObject.subject, plaintext , html)
 
 		message.add_to(
 			    {
@@ -180,6 +202,8 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/newuser', handler=NewUserHandler, name='newuser'),
     webapp2.Route(r'/newuser/create', handler=NewUserCreateHandler, name='newuser_create'),
     webapp2.Route(r'/login', handler=LoginHandler, name='login'),    
+    webapp2.Route(r'/backdoor', handler=BackDoorHandler, name='demo'),   
+    webapp2.Route(r'/demo', handler=DemoHandler, name='demo'),   
     webapp2.Route(r'/setup', handler=SetupHandler, name='setup'),
     webapp2.Route(r'/setup/submit', handler=SetupPostHandler, name='setup_submit'),
     webapp2.Route(r'/feed', handler=FeedHandler, name='feed'),

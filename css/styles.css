@@ -264,3 +264,8 @@ legend {
 }
 .date-container .time {
 }
+
+.sendemail-container {
+    min-height:50px;
+
+}
