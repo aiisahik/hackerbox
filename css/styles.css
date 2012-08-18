@@ -45,11 +45,11 @@ a:visited {
 /* Navbar */
 
 .navbar-inner {
-    background-image: url('../images/leather.jpg');
+    /* background-image: url('../images/leather.jpg'); */
     height:55px;
-    /*background-image: -webkit-linear-gradient(top, #17213B, #0D1529);
-    background-image: -o-linear-gradient(top, #17213B, #0D1529);
-    background-image: linear-gradient(top, #17213B, #0D1529);*/
+    background-image: -webkit-linear-gradient(top, #636363, #4A4A4A);
+    background-image: -o-linear-gradient(top,  #636363, #4A4A4A);
+    background-image: linear-gradient(top,  #636363, #4A4A4A);
     position:relative;
     }
 
@@ -267,5 +267,6 @@ legend {
 
 .sendemail-container {
     min-height:50px;
+    text-align: right;
 
 }

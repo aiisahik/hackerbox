@@ -71,10 +71,6 @@
                 <% } %>
                 <div class="text-<%= type %>">
                   <%= body %>
-                  <% if (!isResearcher) { %>
-                    <br><br><a class="btn btn-info" style="float:right;" href="#">Reply</a>
-                  <% } %>
-          
                 </div>
             </div>
             <div class="date-container" style="float:left">
@@ -87,7 +83,6 @@
                     <% } %>
             </div>
         </div>
-        <div id="reply-container-<%= id %>"></div>
     </script>
 
 <!-- Send Email to individual Participant template --> 
@@ -159,6 +154,7 @@
   <body>
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
+        <a class="navbrand" href="#">UserDiary</a>
         <ul class="nav pull-right">
           <li class="" id="researcher-nav"><img class="thumbnail" id="researcher-image" src="images/profile1.jpg" /></li>
           <li><a href="#" id="researcher-name" class="nav-right-text"></a></li>
@@ -185,17 +181,7 @@
            </ul>
           </div><!--/.well -->
         </div><!--/span-->
-         <div class="subheader">
-           <div id="sort-by" class="btn-group dropdown">
-             <button class="btn btn-small">Sort by</button>
-             <button class="btn dropdown-toggle" data-toggle="dropdown">
-               <span class="caret"></span></button>
-             <ul class="dropdown-menu">
-               <li><a href="#">Oldest to Newest</a></li>
-               <li><a href="#">Newest to Oldest</a></li>
-             </ul>
-           </div>
-          </div>
+        
           
         <div class="span9">
           <div id="main-tab-content">
@@ -228,20 +214,13 @@
                     <input name="email_address" type="text" class="input-xlarge" id="p_email_address">
                    </div>
                 </div>    
-
-                <div class="control-group">                          
-                  <label class="control-label" for="input01">Phone Number</label>
-                  <div class="controls">
-                    <input name="phone_number" type="text" class="input-xlarge" id="p_phone_number">          
-                  </div>
-                </div> 
               </fieldset>
             </form>
           </div>
           <div class="modal-footer">
-             <div class="alert alert-success" id="addParticipant-success" hidden="true"></div>
+             <div class="alert alert-success" style="{float: left;}" id="addParticipant-success" hidden="true"></div>
             <a href="#" class="btn btn-info" id="addParticipant">Add Participant</a>
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">Done</a>
           </div>
         </div>
         <!-- hidden Send Email Modal --> 
