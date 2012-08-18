@@ -255,3 +255,15 @@ a.navbrand {
   color: #C2C2C2;
   text-shadow: 0 1px 0 rgba(255, 255, 255, .1), 0 0 30px rgba(255, 255, 255, .125);
 }
+
+a.navbrand:hover {
+  text-decoration: none;
+ 
+}
+
+.alert-modal { 
+  float: left;
+  width: 250px;
+
+}
+

@@ -37,7 +37,7 @@ a:visited {
 }
 
 #main .success code {
-    font-size: 12px;
+    font-size: 14px;
     color: green;
     line-height: 13px;
 }
@@ -211,14 +211,14 @@ legend {
 .post {
     background-color:white;
     width:550px;
-    min-height:100px;
+    min-height:70px;
     margin:auto;
     margin-bottom:30px;
     border-radius:10px;
     -webkit-border-radius:10px;
     -moz-border-radius: 10px;
     font-family: 'Quattrocento Sans', sans-serif;
-    font-size:14px;
+    font-size:16px;
     text-align:center;
     
 }

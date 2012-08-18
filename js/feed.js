@@ -28,6 +28,9 @@ $(function(){
       model: Email
    });
 
+   Study = Parse.Object.extend("Study");
+   Email = Parse.Object.extend("Email");
+
 // -- VIEWS
     LeftNavItem = Backbone.View.extend({
         template: _.template($('#participant-li-template').html()),
@@ -140,7 +143,6 @@ $(function(){
       getFeed: function(participant){
         var self = this;
         // window.feed = new window.Emails();
-        var Email = Parse.Object.extend("Email");
         window.query = new Parse.Query(Email);
         window.query.equalTo("participant",participant);
         window.query.equalTo("study",window.currentStudy);
@@ -192,6 +194,7 @@ $(function(){
           return false;
         },
       sendEmail: function() {
+          var self = this;
           $("#sendReplyEmail").removeClass("btn-info").addClass("disabled");
           $("#sendReplyEmail").empty().append("Sending Email");
           var subject = $('#emailsubject').val();
@@ -201,6 +204,7 @@ $(function(){
           var researcherName = currentUser.get('firstName');
           var company = currentUser.get('company');
           var participantID = this.model.id;
+
           if (!body) {
               alert('Please enter some text');
               return false;
@@ -215,11 +219,8 @@ $(function(){
               $("#sendReplyEmail").empty().append("Send");
               $('#emailsubject').val("");
               $('#emailbody').val("");
-              //$("#replyemail").remove().append("<h2>Email Submitted</h2>");
-                // $('#replyemail').fadeOut('slow', function() {
-                  // $('#reply-container-' + this.model.id).hide();
-                // Animation complete.
-              //});
+              // refresh the email feed for this participant
+              self.render();
             }
           });
           return false;
@@ -250,7 +251,6 @@ $(function(){
 
       home: function() {
         var self = this;
-        var Study = Parse.Object.extend("Study");
         var q = new Parse.Query(Study);
         q.equalTo("creator", currentUser);
         q.first({
@@ -284,9 +284,7 @@ $(function(){
       },
 
       render: function(){
-         
       },
-
       getData: function(){
         var self = this;
         
@@ -296,12 +294,17 @@ $(function(){
         window.participants = participant_query.collection();
          window.participants.fetch({  
           success: function(collection) {
-             self.showParticipants(collection);
-           },
-           error: function(collection, error) {
-             alert(error.message);
-           }
-         });
+            if (collection.length > 0) {
+              self.showParticipants(collection);  
+            } else {
+              self.setupAddParticipants();
+              $('#addParticipantModal').modal('show');
+            }
+          },
+          error: function(collection, error) {
+            alert(error.message);
+          }
+        });
       }, 
       showParticipants: function(collection){
         $('#participant-container').empty();

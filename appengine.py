@@ -188,7 +188,7 @@ class EmailAjaxHandler(webapp2.RequestHandler):
 			    }
 		    )
 		s.web.send(message)
-
+		
 		self.response.out.write('[{"success": "true"}]')			
 
 class FeedHandler(webapp2.RequestHandler):
