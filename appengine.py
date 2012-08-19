@@ -71,7 +71,6 @@ class EmailHandler(webapp2.RequestHandler):
 		# participant = parsepy.ParseQuery("Participant")
 		self.response.out.write(template.render(path,{}))
 
-
 class EmailSubmitHandler(webapp2.RequestHandler):
     def post(self):
 		s = sendgrid.Sendgrid('jinxdabinx', 'sendgrid', secure=True) 
@@ -178,8 +177,11 @@ class EmailAjaxHandler(webapp2.RequestHandler):
 		logging.info('sending email: ' + plaintext)
 		logging.info('study ID: ' + self.request.get('studyID'))
 		
-		message = sendgrid.Message((emailObject.fromEmail , self.request.get('researcherName') + "@" + self.request.get('company')), emailObject.subject, 
-				plaintext , html)
+		message = sendgrid.Message((emailObject.fromEmail , 
+			self.request.get('researcherName') + "@" + self.request.get('company')), 
+			emailObject.subject, 
+			plaintext, 
+			html)
 		# message = sendgrid.Message(("test@userresearchtool.appspotmail.com" , "Katherine from Square"), emailObject.subject, plaintext , html)
 
 		message.add_to(
@@ -189,7 +191,9 @@ class EmailAjaxHandler(webapp2.RequestHandler):
 		    )
 		s.web.send(message)
 		
-		self.response.out.write('[{"success": "true"}]')			
+
+		outputJSON = '{"subject":"'+emailObject.subject+'", "body":"'+emailObject.body+'", "studyID":"'+study.objectId()+'", "toEmail":"'+emailObject.toEmail+'", "fromEmail":"'+emailObject.fromEmail+'", "participant":"'+emailObject.participant.objectId()+'", "updatedAt":"'+emailObject.updatedAt().strftime("%Y-%m-%d %H:%M:%S")+'"}'
+		self.response.out.write(outputJSON)			
 
 class FeedHandler(webapp2.RequestHandler):
     def get(self):

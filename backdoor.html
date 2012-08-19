@@ -48,7 +48,6 @@
            the entire cohort.
     	</p>
     	<br />
-
       <form method="post"><p>
         <div id="signuptitle"></div>
   		  <input name="email" id="email" type="text" class="span6" placeholder="Email"><p>
@@ -151,12 +150,10 @@
             }
           });
         });
-
         $("#showRequestInvite").click(function(e) {
           e.preventDefault();
           $('#requestModal').modal('show');
         });
-
         $('#requestModal').on('show', function () {
           $('#submitRequest').click(function(e){
             e.preventDefault();
@@ -172,7 +169,6 @@
             });
           });
         });
-
         $("#showsignup").click(function(e) {
           e.preventDefault();
           var fields_template = _.template($('#signup-template').html());

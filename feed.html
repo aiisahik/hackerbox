@@ -44,10 +44,13 @@
     
         <a class="target" href="#tab-<%= id %>" data-toggle="tab"><img class="profile-image thumbnail" src="images/default_profile_image.png" /><span class="nav-name"><%= firstName %> <%= lastName %><br></span></a>
     </script>
-<!-- very small template - do we really need this? -->    
+<!-- main feed template  -->    
     <script id="feed-container-template" type="text/template">
       <br>
-      <div class="sendemail-container"> <a class="btn btn-info" href="#">Send Email</a><br><br></div>
+      <div class="sendemailbutton-container"> 
+        <a class="btn btn-info" href="#">Send Email</a><br><br>
+      </div>
+      <div class="sendemail-container"> </div>
       <div class="posts"></div>
     </script>
 
